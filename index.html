@@ -235,20 +235,29 @@
         <form id="customer-form" class="space-y-4 flex-grow">
             <div>
                 <label for="name" class="form-label">이름</label>
-                <input type="text" id="name" name="name" class="form-input">
+                <input type="text" id="name" name="name" class="form-input" required>
             </div>
             <div>
                 <label for="phone" class="form-label">전화번호</label>
-                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678">
+                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678" required>
             </div>
             <div>
                 <label for="region" class="form-label">관심지역</label>
-                <input type="text" id="region" name="region" class="form-input">
+                <input type="text" id="region" name="region" class="form-input" required>
+            </div>
+            <div>
+                <label class="form-label">거래목적</label>
+                <div class="grid grid-cols-2 gap-2 radio-group">
+                    <input type="radio" name="purpose" id="purpose-invest" value="investment" class="sr-only" required>
+                    <label for="purpose-invest">투자</label>
+                    <input type="radio" name="purpose" id="purpose-reside" value="residence" class="sr-only">
+                    <label for="purpose-reside">실거주</label>
+                </div>
             </div>
             <div>
                 <label class="form-label">관심유형</label>
                 <div class="grid grid-cols-3 gap-2 radio-group">
-                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only">
+                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only" required>
                     <label for="type-apt">아파트</label>
                     <input type="radio" name="type" id="type-op" value="officetel" class="sr-only">
                     <label for="type-op">오피스텔</label>
@@ -264,7 +273,7 @@
             </div>
             <div class="pt-2">
                 <div class="flex items-center">
-                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" required>
                     <label for="consent" class="ml-2 block text-sm text-gray-700">개인정보 수집 및 이용에 동의합니다.</label>
                 </div>
             </div>
@@ -579,8 +588,12 @@
             submitBtn.disabled = !(isNameValid && isPhoneValid && isRegionValid && isPurposeValid && isTypeValid && isConsentChecked);
         }
 
-        customerForm.addEventListener('input', validateForm);
-        customerForm.addEventListener('change', validateForm);
+        // Attach event listeners to all form elements
+        const allFormElements = customerForm.querySelectorAll('input');
+        allFormElements.forEach(el => {
+            el.addEventListener('input', validateForm);
+            el.addEventListener('change', validateForm);
+        });
         
         // --- Form Submission Logic ---
         customerForm.addEventListener('submit', (e) => {
