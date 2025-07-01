@@ -211,7 +211,9 @@
 <div id="landing-page" class="app-container">
     <div class="content-viewer p-6 md:p-8 flex flex-col">
         <div class="text-center mb-6">
-            <img src="imgi_6_logo.png" alt="에피트 로고" class="w-32 mx-auto mb-2">
+            <div class="inline-block bg-gray-800 p-3 rounded-lg mb-4">
+                <img src="boonyangcok.png" alt="분양콕 로고" class="h-8">
+            </div>
             <h1 class="text-2xl font-bold text-gray-800">관심고객 등록</h1>
             <p class="text-gray-500 mt-1">정보를 입력하시면 브로슈어를 보실 수 있습니다.</p>
         </div>
@@ -257,7 +259,9 @@
             </div>
         </form>
         <div class="mt-6 text-center">
-            <img src="boonyangcok.png" alt="분양콕 로고" class="h-8 mx-auto">
+            <div class="inline-block bg-gray-200 p-3 rounded-lg">
+                <img src="imgi_6_logo.png" alt="에피트 로고" class="w-32 invert brightness-0">
+            </div>
         </div>
     </div>
 </div>
@@ -493,6 +497,11 @@
         <div id="page-indicator" class="text-sm text-gray-600 w-24 text-center"></div>
         <button id="next-btn" class="nav-button">다음 &gt;</button>
     </div>
+
+    <!-- Floating Call Button -->
+    <a href="tel:010-5930-3064" id="call-btn" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl z-50 transform hover:scale-110 transition-transform duration-200 hidden">
+        <i class="fa-solid fa-phone fa-lg"></i>
+    </a>
 </div>
 
 <script>
@@ -504,6 +513,7 @@
         const submitBtn = document.getElementById('submit-btn');
         const formInputs = customerForm.querySelectorAll('input');
         const navigationControls = document.getElementById('navigation-controls');
+        const callBtn = document.getElementById('call-btn');
 
         // --- Form Validation Logic ---
         function validateForm() {
@@ -534,6 +544,7 @@
                 brochureApp.classList.remove('hidden');
                 navigationControls.classList.remove('hidden');
                 navigationControls.classList.add('flex');
+                callBtn.classList.remove('hidden');
                 
                 initBrochure();
             }
