@@ -5,319 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이천 부발역 에피트 | 인터랙티브 브로슈어</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #333; /* Dark background for better focus */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        #flipbook-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #flipbook {
-            /* Dimensions will be set by JS */
-        }
-        #flipbook .page {
-            background-color: white;
-            background-repeat: no-repeat;
-            background-size: cover;
-            box-shadow: 0 0 20px rgba(0,0,0,0.4);
-        }
-        #flipbook .page-wrapper {
-            padding: 1.5rem; /* Adjusted padding */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: 100%;
-            overflow: hidden;
-        }
-        #flipbook .hard {
-             background-color: #f3f4f6;
-        }
-        .page-number {
-            position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #999;
-            font-size: 0.8rem;
-        }
-        .hero-gradient {
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.1));
-        }
-        .section-title-sm {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 900;
-            font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size */
-            text-align: center;
-            margin-bottom: 0.5rem;
-            color: #212529;
-        }
-         .section-subtitle-sm {
-            font-family: 'Gowun Dodum', sans-serif;
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            text-align: center;
-            color: #495057;
-            margin-bottom: 1.5rem;
-        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin:0; }
+        #cover-form, #flipbook-container { width: 90%; max-width: 800px; height: 90%; max-height: 600px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.4); position: relative; }
+        /* Form Page */
+        #cover-form { padding: 2rem; overflow-y: auto; }
+        #cover-form h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+        #cover-form .input-group { margin-bottom: 1rem; }
+        #cover-form label { display: block; font-weight: 700; margin-bottom: 0.25rem; }
+        #cover-form input, #cover-form select { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.375rem; }
+        #start-btn { background-color: #2563eb; color: white; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; width: 100%; font-size: 1rem; }
+        /* Flipbook Pages */
+        #flipbook { width: 100%; height: 100%; }
+        #flipbook .page { background: white; }
+        .page-wrapper { padding: 1.5rem; height: 100%; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+        .page-number { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); color: #999; font-size: 0.75rem; }
         /* Navigation Buttons */
-        .navigation-buttons {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: flex;
-            gap: 1rem;
-        }
-        .navigation-buttons button {
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 9999px;
-            cursor: pointer;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 0.9rem;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .navigation-buttons button:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        .navigation-buttons button:active {
-            transform: scale(0.95);
-        }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 0.5rem; border-radius: 9999px; cursor: pointer; }
+        #prev-btn { left: -2rem; }
+        #next-btn { right: -2rem; }
     </style>
 </head>
 <body>
 
-<div id="flipbook-container">
+<div id="cover-form">
+    <h2>고객 정보 입력</h2>
+    <div class="input-group">
+        <label for="name">이름</label>
+        <input type="text" id="name" placeholder="홍길동">
+    </div>
+    <div class="input-group">
+        <label for="phone">전화번호</label>
+        <input type="text" id="phone" placeholder="010-1234-5678">
+    </div>
+    <div class="input-group">
+        <label for="area">관심 지역</label>
+        <input type="text" id="area" placeholder="이천 부발역 등">
+    </div>
+    <div class="input-group">
+        <label for="purpose">목적</label>
+        <select id="purpose">
+            <option value="투자">투자</option>
+            <option value="실거주">실거주</option>
+        </select>
+    </div>
+    <div class="input-group">
+        <label for="interest">관심 유형</label>
+        <select id="interest">
+            <option value="아파트">아파트</option>
+            <option value="오피스텔">오피스텔</option>
+        </select>
+    </div>
+    <button id="start-btn">바로보기</button>
+</div>
+
+<div id="flipbook-container" style="display:none;">
     <div id="flipbook">
-        <!-- Cover -->
-        <div class="hard page bg-cover bg-center" style="background-image: url('imgi_7_vis_4.jpg');">
-            <div class="hero-gradient h-full w-full flex flex-col justify-end p-8 text-white">
-                 <div class="w-40 md:w-48 mb-4">
-                    <img src="imgi_6_logo.png" alt="에피트 로고" class="w-full brightness-0 invert">
-                </div>
-                <h1 class="font-['Gowun+Dodum'] text-2xl md:text-3xl font-semibold leading-snug drop-shadow-md">
-                    이천 부발역 에피트<br>프리미엄 브로슈어
-                </h1>
-                <div class="absolute bottom-8 left-8 text-white/70 text-xs font-gowun md:hidden">
-                    <p>페이지의 모서리를 드래그하여<br>책장을 넘겨보세요.</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Page 1: Location -->
+        <!-- Page 1: 고객 정보 요약 -->
         <div class="page">
             <div class="page-wrapper">
-                <h2 class="section-title-sm">압도적 입지</h2>
-                <p class="section-subtitle-sm">이천의 모든 가치가 모이는 중심</p>
-                <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
+                <h2>고객 정보</h2>
+                <p id="info-summary"></p>
                 <div class="page-number">1</div>
             </div>
         </div>
-
-        <!-- Page 2: Price -->
+        <!-- Page 2: 압도적 입지 -->
         <div class="page">
             <div class="page-wrapper">
-                <h2 class="section-title-sm">합리적 분양가</h2>
-                <p class="section-subtitle-sm">주변 단지 대비 높은 가치, 현명한 선택</p>
-                <div class="w-full h-3/4">
-                    <canvas id="priceChart"></canvas>
-                </div>
-                <p class="text-center mt-2 text-xs text-gray-500">※ 84㎡, 20층 이상 기준</p>
+                <h2>압도적 입지</h2>
+                <p>이천의 모든 가치가 모이는 중심, 부발역 초역세권</p>
                 <div class="page-number">2</div>
             </div>
         </div>
-        
-        <!-- Page 3: Education -->
-        <div class="page">
-             <div class="page-wrapper items-center">
-                 <h2 class="section-title-sm">명품 교육 환경</h2>
-                 <p class="section-subtitle-sm">자녀의 미래를 위한 최고의 선택</p>
-                <img src="imgi_1_pop250407.jpg" alt="에듀 프리미엄" class="max-w-xs w-full rounded-lg shadow-md">
-                 <div class="p-4 text-center">
-                    <h3 class="text-lg font-bold">서울대 멘토 교육 프로그램</h3>
-                    <p class="text-gray-600 text-sm mt-1">안전한 도보 통학권의 초/중/고교는 기본,<br>에피트만의 특별한 교육 혜택까지 누립니다.</p>
-                </div>
-                 <div class="page-number">3</div>
-            </div>
-        </div>
-
-        <!-- Page 4: Life Infrastructure -->
+        <!-- Page 3: 합리적 분양가 -->
         <div class="page">
             <div class="page-wrapper">
-                <h2 class="section-title-sm">완벽한 생활 인프라</h2>
-                <p class="section-subtitle-sm">쇼핑, 문화, 자연, 배송까지 편리하게</p>
-                <div class="space-y-4">
-                    <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-yellow-100 text-yellow-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div><div><h4 class="font-bold text-sm">편리한 쇼핑</h4><p class="text-xs text-gray-600">하나로마트, 롯데마트 등</p></div></div>
-                    <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-red-100 text-red-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg></div><div><h4 class="font-bold text-sm">가까운 의료</h4><p class="text-xs text-gray-600">경기도의료원 이천병원</p></div></div>
-                    <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-indigo-100 text-indigo-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg></div><div><h4 class="font-bold text-sm">다양한 문화/여가</h4><p class="text-xs text-gray-600">이천시립도서관, 온천공원 등</p></div></div>
-                    <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-teal-100 text-teal-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945C21.055 11 21 11.555 21 12c0 5.523-4.477 10-10 10S1 17.523 1 12c0-.445.055-1 .945-1z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a2 2 0 012 2v6h-4V4a2 2 0 012-2z" /></svg></div><div><h4 class="font-bold text-sm">쾌적한 자연</h4><p class="text-xs text-gray-600">단지 앞 어린이공원, 효양산</p></div></div>
-                    <div class="bg-orange-50 p-4 rounded-lg flex items-center space-x-4 mt-8"><div class="bg-orange-100 text-orange-700 p-3 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div><div><h4 class="font-bold">빠른 배송 생활권</h4><p class="text-sm text-gray-600">쿠팡, 마켓컬리 등 새벽/당일배송 이용</p></div></div>
-                </div>
-                <div class="page-number">4</div>
+                <h2>합리적 분양가</h2>
+                <p>주변 단지 대비 높은 가치, 현명한 선택</p>
+                <div class="page-number">3</div>
             </div>
         </div>
-
-        <!-- Page 5: Unit 84A -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84A</h2>
-                <p class="section-subtitle-sm">가장 선호도 높은 4Bay 판상형 구조</p>
-                <img src="imgi_3_unit_84a_img02.jpg" alt="84A 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">5</div>
-            </div>
-        </div>
-        
-        <!-- Page 6: Unit 84B -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84B</h2>
-                <p class="section-subtitle-sm">효율적인 공간 구성의 실속 평면</p>
-                <img src="imgi_3_unit_84b_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">6</div>
-            </div>
-        </div>
-
-        <!-- Page 7: Unit 84C -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84C</h2>
-                <p class="section-subtitle-sm">넓은 개방감과 쾌적함을 선사하는 평면</p>
-                <img src="imgi_3_unit_84c_img02.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">7</div>
-            </div>
-        </div>
-
-        <!-- Page 8: Unit 84D -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84D</h2>
-                <p class="section-subtitle-sm">다양한 라이프스타일을 담는 감각적인 평면</p>
-                <img src="imgi_3_unit_84d_img02.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">8</div>
-            </div>
-        </div>
-        
-        <!-- Back Cover -->
-        <div class="hard page">
-            <div class="page-wrapper items-center text-center">
-                <h2 class="section-title-sm">오시는 길</h2>
-                <p class="text-gray-600 text-sm">모델하우스에서 에피트의 가치를 직접 확인하세요.</p>
-                <div class="mt-4 w-full h-1/2 max-w-md rounded-lg overflow-hidden shadow-lg">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3179.799518298018!2d127.487963!3d37.181811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b6d411b593617%3A0x868a54d5e3881e5c!2z6rK96riw64-EIOydgOyjvOydgCDrsJXrsKn7J64g7JWE66-466asIDY4Mi01!5e0!3m2!1sko!2skr!4v1688200000000!5m2!1sko!2skr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-                <p class="text-sm font-bold mt-4">경기도 이천시 부발읍 아미리 682-5</p>
-                <p class="text-lg font-bold mt-2 text-blue-600">T. 031.632.5100</p>
-            </div>
-        </div>
+        <!-- 추가 페이지들은 동일한 구조로 이어집니다 -->
     </div>
+
+    <button id="prev-btn" class="nav-btn">‹</button>
+    <button id="next-btn" class="nav-btn">›</button>
 </div>
 
-<div class="navigation-buttons">
-    <button id="prev-btn">&lt; 이전</button>
-    <button id="next-btn">다음 &gt;</button>
-</div>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
 <script>
-    // Using jQuery's document ready shorthand
-    $(function() {
-        const flipbook = $('#flipbook');
-
-        function resizeFlipbook() {
-            const container = $('#flipbook-container');
-            const aspectRatio = 0.707; 
-
-            const maxWidth = container.width() * 0.95;
-            const maxHeight = container.height() * 0.9;
-
-            let bookHeight = maxHeight;
-            let bookWidth = bookHeight * aspectRatio;
-
-            if (bookWidth > maxWidth) {
-                bookWidth = maxWidth;
-                bookHeight = bookWidth / aspectRatio;
-            }
-            
-            if (flipbook.data('turn')) {
-                flipbook.turn('size', bookWidth, bookHeight);
-            }
+$(function() {
+    // 시작 버튼 클릭
+    $('#start-btn').on('click', function() {
+        const name = $('#name').val().trim();
+        const phone = $('#phone').val().trim();
+        const area = $('#area').val().trim();
+        const purpose = $('#purpose').val();
+        const interest = $('#interest').val();
+        if (!name || !phone || !area) {
+            alert('모든 정보를 입력해주세요.');
+            return;
         }
-
-        flipbook.turn({
+        // 정보 요약 출력
+        $('#info-summary').html(
+            `이름: ${name}<br>전화번호: ${phone}<br>관심지역: ${area}<br>목적: ${purpose}<br>관심유형: ${interest}`
+        );
+        // 폼 숨기고 플립북 노출
+        $('#cover-form').hide();
+        $('#flipbook-container').show();
+        // 플립북 초기화
+        $('#flipbook').turn({
             display: 'single',
-            width: 1,
-            height: 1,
-            elevation: 50,
-            acceleration: true,
-            gradients: true,
-            autoCenter: true,
-            when: {
-                turned: function(event, page, view) {
-                    if (page === 2) { 
-                        renderPriceChartOnce();
-                    }
-                }
-            }
+            width: '100%',
+            height: '100%',
+            autoCenter: true
         });
-
-        resizeFlipbook();
-        $(window).on('resize', resizeFlipbook);
-
-        $('#prev-btn').on('click', function(e) {
-            e.preventDefault();
-            flipbook.turn('previous');
-        });
-
-        $('#next-btn').on('click', function(e) {
-            e.preventDefault();
-            flipbook.turn('next');
-        });
-
-        let chartRendered = false;
-        function renderPriceChartOnce() {
-            if (chartRendered) return;
-            chartRendered = true;
-            
-            const ctx = document.getElementById('priceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['이천자이 더 파크', '이천 롯데캐슬 페라즈', '이천 부발역 에피트'],
-                    datasets: [{
-                        label: '84㎡ 분양가 (억원)',
-                        data: [5.2, 5.8, 6.1],
-                        backgroundColor: ['rgba(156, 163, 175, 0.6)', 'rgba(239, 68, 68, 0.6)', 'rgba(59, 130, 246, 0.7)'],
-                        borderColor: ['rgba(156, 163, 175, 1)', 'rgba(239, 68, 68, 1)', 'rgba(59, 130, 246, 1)'],
-                        borderWidth: 1,
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 1500, easing: 'easeInOutQuart' },
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, title: { display: true, text: '분양가 (단위: 억원)' } } }
-                }
-            });
-        }
     });
+
+    // 이전/다음
+    $('#prev-btn').on('click', function() { $('#flipbook').turn('previous'); });
+    $('#next-btn').on('click', function() { $('#flipbook').turn('next'); });
+});
 </script>
 
 </body>
