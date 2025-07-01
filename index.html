@@ -6,13 +6,13 @@
     <title>이천 부발역 에피트 | 인터랙티브 브로슈어</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #e0e0e0;
+            background-color: #333; /* Dark background for better focus */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -27,23 +27,21 @@
             justify-content: center;
         }
         #flipbook {
-            width: 90vw;
-            height: 63.63vw; /* 1.414:1 ratio for A4-like paper */
-            max-width: 1100px;
-            max-height: 778px;
+            /* Dimensions will be set by JS */
         }
         #flipbook .page {
             background-color: white;
             background-repeat: no-repeat;
             background-size: cover;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
         }
         #flipbook .page-wrapper {
-            padding: 2rem;
+            padding: 1.5rem; /* Adjusted padding */
             display: flex;
             flex-direction: column;
             justify-content: center;
             height: 100%;
+            overflow: hidden;
         }
         #flipbook .hard {
              background-color: #f3f4f6;
@@ -62,14 +60,14 @@
         .section-title-sm {
             font-family: 'Noto Sans KR', sans-serif;
             font-weight: 900;
-            font-size: 1.8rem;
+            font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size */
             text-align: center;
             margin-bottom: 0.5rem;
             color: #212529;
         }
          .section-subtitle-sm {
             font-family: 'Gowun Dodum', sans-serif;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
             text-align: center;
             color: #495057;
             margin-bottom: 1.5rem;
@@ -77,7 +75,7 @@
         /* Navigation Buttons */
         .navigation-buttons {
             position: absolute;
-            bottom: 15px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -120,12 +118,12 @@
             </div>
         </div>
         
-        <!-- Page 1 & 2 -->
+        <!-- Page 1: The Value -->
         <div class="page">
             <div class="page-wrapper items-center">
                 <h2 class="section-title-sm">모두가 주목하는 가치</h2>
                 <p class="section-subtitle-sm">뜨거운 관심으로 증명된 에피트의 미래</p>
-                <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="max-w-sm w-full rounded-lg shadow-md">
+                <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="max-w-xs w-full rounded-lg shadow-md">
                 <div class="p-4 text-center">
                     <h3 class="text-lg font-bold">최고 40:1 청약 경쟁률</h3>
                     <p class="text-gray-600 text-sm mt-1">시장의 기대를 한 몸에 받은 압도적인 관심</p>
@@ -133,30 +131,32 @@
                 <div class="page-number">1</div>
             </div>
         </div>
-        <div class="page">
-             <div class="page-wrapper items-center">
-                <img src="imgi_1_pop250407.jpg" alt="에듀 프리미엄" class="max-w-sm w-full rounded-lg shadow-md">
-                 <div class="p-4 text-center">
-                    <h3 class="text-lg font-bold">자녀를 위한 에듀 프리미엄</h3>
-                    <p class="text-gray-600 text-sm mt-1">서울대 멘토와 함께하는 특별한 교육 프로그램</p>
-                </div>
-                 <div class="page-number">2</div>
-            </div>
-        </div>
 
-        <!-- Page 3 & 4 -->
+        <!-- Page 2: The Premium -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">PREMIUM 9</h2>
-                <p class="section-subtitle-sm">에피트만의 9가지 프리미엄</p>
+                <p class="section-subtitle-sm">일상의 모든 순간이 특별해지는 9가지 프리미엄</p>
                 <img src="imgi_2_premium_img.jpg" alt="에피트 프리미엄 9가지" class="w-full h-auto">
+                <div class="page-number">2</div>
+            </div>
+        </div>
+
+        <!-- Page 3: The Location -->
+        <div class="page">
+            <div class="page-wrapper">
+                <h2 class="section-title-sm">압도적 입지</h2>
+                <p class="section-subtitle-sm">이천의 모든 가치가 모이는 중심</p>
+                <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
                 <div class="page-number">3</div>
             </div>
         </div>
+
+        <!-- Page 4: The Price -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">합리적 분양가</h2>
-                <p class="section-subtitle-sm">주변 단지 대비 높은 가치</p>
+                <p class="section-subtitle-sm">주변 단지 대비 높은 가치, 현명한 선택</p>
                 <div class="w-full h-3/4">
                     <canvas id="priceChart"></canvas>
                 </div>
@@ -165,23 +165,25 @@
             </div>
         </div>
         
-        <!-- Page 5 & 6 -->
+        <!-- Page 5: The Education -->
         <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">명품 교육 환경</h2>
-                <p class="section-subtitle-sm">자녀의 미래를 생각하는 부모의 마음으로</p>
-                <div class="space-y-6">
-                    <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-4"><div class="bg-blue-100 text-blue-600 p-3 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.496 2.132a1 1 0 00-1.024 0l-4 2.5A1 1 0 005 5.618V14a1 1 0 001 1h1V9a1 1 0 011-1h2a1 1 0 011 1v6h1a1 1 0 001-1V5.618a1 1 0 00-.471-1.024l-4-2.5zM10 11H8v4h2v-4z" clip-rule="evenodd" /></svg></div><div><h4 class="font-bold">아미초등학교</h4><p class="text-sm text-gray-600">안전한 도보 통학 가능</p></div></div>
-                    <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-4"><div class="bg-green-100 text-green-600 p-3 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" /></svg></div><div><h4 class="font-bold">효양중학교</h4><p class="text-sm text-gray-600">우수한 면학 분위기</p></div></div>
-                    <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-4"><div class="bg-purple-100 text-purple-600 p-3 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-1.078.022l-7 4.5a1 1 0 00.554 1.838l.5-.143a1 1 0 00.554-1.838L10 3.733l5.446 3.5A1 1 0 0016.5 6h-1.882l-2.66-1.715a1 1 0 00-1.078.022z" /><path d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" /><path d="M4 14a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z" /></svg></div><div><h4 class="font-bold">효양고등학교</h4><p class="text-sm text-gray-600">농어촌 특별전형 혜택</p></div></div>
+             <div class="page-wrapper items-center">
+                 <h2 class="section-title-sm">명품 교육 환경</h2>
+                 <p class="section-subtitle-sm">자녀의 미래를 위한 최고의 선택</p>
+                <img src="imgi_1_pop250407.jpg" alt="에듀 프리미엄" class="max-w-xs w-full rounded-lg shadow-md">
+                 <div class="p-4 text-center">
+                    <h3 class="text-lg font-bold">서울대 멘토 교육 프로그램</h3>
+                    <p class="text-gray-600 text-sm mt-1">안전한 도보 통학권의 초/중/고교는 기본,<br>에피트만의 특별한 교육 혜택까지 누립니다.</p>
                 </div>
-                <div class="page-number">5</div>
+                 <div class="page-number">5</div>
             </div>
         </div>
+
+        <!-- Page 6: The Life -->
         <div class="page">
             <div class="page-wrapper">
-                <h2 class="section-title-sm">풍부한 생활 인프라</h2>
-                <p class="section-subtitle-sm">쇼핑, 문화, 자연까지 완벽하게</p>
+                <h2 class="section-title-sm">완벽한 생활 인프라</h2>
+                <p class="section-subtitle-sm">쇼핑, 문화, 자연, 배송까지 편리하게</p>
                 <div class="space-y-4">
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-yellow-100 text-yellow-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div><div><h4 class="font-bold text-sm">편리한 쇼핑</h4><p class="text-xs text-gray-600">하나로마트, 롯데마트 등</p></div></div>
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-red-100 text-red-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg></div><div><h4 class="font-bold text-sm">가까운 의료</h4><p class="text-xs text-gray-600">경기도의료원 이천병원</p></div></div>
@@ -193,7 +195,7 @@
             </div>
         </div>
 
-        <!-- Page 7 & 8 -->
+        <!-- Page 7: Unit 84A -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84A</h2>
@@ -202,29 +204,33 @@
                 <div class="page-number">7</div>
             </div>
         </div>
+        
+        <!-- Page 8: Unit 84B -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84B</h2>
                 <p class="section-subtitle-sm">효율적인 공간 구성의 실속 평면</p>
-                <img src="imgi_17_unit_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
+                <img src="imgi_3_unit_84b_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
                 <div class="page-number">8</div>
             </div>
         </div>
 
-        <!-- Page 9 & 10 -->
+        <!-- Page 9: Unit 84C -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84C</h2>
                 <p class="section-subtitle-sm">넓은 개방감과 쾌적함을 선사하는 평면</p>
-                <img src="imgi_19_unit_img03.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
+                <img src="imgi_3_unit_84c_img02.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
                 <div class="page-number">9</div>
             </div>
         </div>
+
+        <!-- Page 10: Unit 84D -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84D</h2>
                 <p class="section-subtitle-sm">다양한 라이프스타일을 담는 감각적인 평면</p>
-                <img src="imgi_20_unit_img04.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
+                <img src="imgi_3_unit_84d_img02.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
                 <div class="page-number">10</div>
             </div>
         </div>
@@ -250,40 +256,56 @@
 </div>
 
 <script>
-    $(window).ready(function() {
+    // Wait for the entire page to load, including images
+    $(window).on('load', function() {
         const flipbook = $('#flipbook');
-        
+
+        // Function to resize the flipbook to fit the container
+        function resizeFlipbook() {
+            const container = $('#flipbook-container');
+            // A4-like portrait aspect ratio
+            const aspectRatio = 0.707; 
+
+            const maxWidth = container.width() * 0.95;
+            const maxHeight = container.height() * 0.9;
+
+            let bookHeight = maxHeight;
+            let bookWidth = bookHeight * aspectRatio;
+
+            if (bookWidth > maxWidth) {
+                bookWidth = maxWidth;
+                bookHeight = bookWidth / aspectRatio;
+            }
+            
+            // Ensure flipbook is initialized before resizing
+            if (flipbook.data('turn')) {
+                flipbook.turn('size', bookWidth, bookHeight);
+            }
+        }
+
+        // Initialize the flipbook
         flipbook.turn({
-            width: '90vw',
-            height: '63.63vw',
-            max_width: 1100,
-            max_height: 778,
+            display: 'single',
+            width: 1, // Initial dummy size
+            height: 1,
             elevation: 50,
             gradients: true,
             autoCenter: true,
             when: {
                 turned: function(event, page, view) {
-                    // Render chart when its page (page 4) is turned to
-                    if (page === 4 || page === 5) {
+                    // Render chart when its page is visible
+                    if (page === 4) { 
                         renderPriceChartOnce();
                     }
                 }
             }
         });
 
-        $(window).on('resize', function() {
-            const container = $('#flipbook-container');
-            const bookWidth = container.width() * 0.9;
-            const bookHeight = bookWidth / 1.414;
-            
-            if (bookHeight > container.height() * 0.9) {
-                 flipbook.turn('size', bookWidth, container.height() * 0.9);
-            } else {
-                 flipbook.turn('size', bookWidth, bookHeight);
-            }
+        // Set initial size and bind resize event
+        resizeFlipbook();
+        $(window).on('resize', resizeFlipbook);
 
-        }).trigger('resize');
-
+        // Navigation button handlers
         $('#prev-btn').on('click', function(e) {
             e.preventDefault();
             flipbook.turn('previous');
@@ -294,6 +316,7 @@
             flipbook.turn('next');
         });
 
+        // Chart rendering logic
         let chartRendered = false;
         function renderPriceChartOnce() {
             if (chartRendered) return;
