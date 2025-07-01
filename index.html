@@ -18,7 +18,7 @@
         #start-btn { background-color: #2563eb; color: white; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; width: 100%; font-size: 1rem; }
         /* Flipbook Pages */
         #flipbook { width: 100%; height: 100%; }
-        #flipbook .page { background: white; }
+        #flipbook .page { background: white; position: relative; }
         .page-wrapper { padding: 1.5rem; height: 100%; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
         .page-number { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); color: #999; font-size: 0.75rem; }
         /* Navigation Buttons */
@@ -57,7 +57,7 @@
             <option value="오피스텔">오피스텔</option>
         </select>
     </div>
-    <button id="start-btn">바로보기</button>
+    <button id="start-btn">시작하기</button>
 </div>
 
 <div id="flipbook-container" style="display:none;">
@@ -74,7 +74,7 @@
         <div class="page">
             <div class="page-wrapper">
                 <h2>압도적 입지</h2>
-                <p>이천의 모든 가치가 모이는 중심, 부발역 초역세권</p>
+                <p>이천의 모든 가치가 모이는 중심</p>
                 <div class="page-number">2</div>
             </div>
         </div>
@@ -83,10 +83,55 @@
             <div class="page-wrapper">
                 <h2>합리적 분양가</h2>
                 <p>주변 단지 대비 높은 가치, 현명한 선택</p>
+                <canvas id="priceChart" style="flex:1;"></canvas>
+                <p class="text-xs text-gray-500">※ 84㎡, 20층 이상 기준</p>
                 <div class="page-number">3</div>
             </div>
         </div>
-        <!-- 추가 페이지들은 동일한 구조로 이어집니다 -->
+        <!-- Page 4: 명품 교육 환경 -->
+        <div class="page">
+            <div class="page-wrapper items-center">
+                <h2>명품 교육 환경</h2>
+                <p>자녀의 미래를 위한 최고의 선택</p>
+                <div class="mt-4">
+                    <h3 class="font-bold">서울대 멘토 교육 프로그램</h3>
+                    <p class="text-sm text-gray-600">안전한 도보 통학권의 초/중/고교는 기본</p>
+                </div>
+                <div class="page-number">4</div>
+            </div>
+        </div>
+        <!-- Page 5: 완벽한 생활 인프라 -->
+        <div class="page">
+            <div class="page-wrapper">
+                <h2>완벽한 생활 인프라</h2>
+                <p>쇼핑, 의료, 문화, 자연까지 편리하게</p>
+                <ul class="list-disc list-inside mt-2">
+                    <li>하나로마트·롯데마트</li>
+                    <li>경기도의료원 이천병원</li>
+                    <li>이천시립도서관·온천공원</li>
+                    <li>쿠팡·마켓컬리 새벽배송</li>
+                </ul>
+                <div class="page-number">5</div>
+            </div>
+        </div>
+        <!-- Page 6-9: UNIT 84A-D -->
+        <div class="page"><div class="page-wrapper"><h2>UNIT 84A</h2><p>가장 선호도 높은 4Bay 판상형 구조</p><div class="page-number">6</div></div></div>
+        <div class="page"><div class="page-wrapper"><h2>UNIT 84B</h2><p>효율적인 공간 구성의 실속 평면</p><div class="page-number">7</div></div></div>
+        <div class="page"><div class="page-wrapper"><h2>UNIT 84C</h2><p>넓은 개방감과 쾌적함을 선사하는 평면</p><div class="page-number">8</div></div></div>
+        <div class="page"><div class="page-wrapper"><h2>UNIT 84D</h2><p>다양한 라이프스타일을 담는 감각적인 평면</p><div class="page-number">9</div></div></div>
+        <!-- Page 10: 오시는 길 -->
+        <div class="page">
+            <div class="page-wrapper text-center">
+                <h2>오시는 길</h2>
+                <p>모델하우스에서 에피트의 가치를 확인하세요</p>
+                <div class="mt-4 h-48">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3179.799518298018!2d127.487963!3d37.181811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b6d411b593617%3A0x868a54d5e3881e5c!2z6rK96riw64-EIOydgOyjvOydgCDrsJXrsKn7J64g7JWE66-466asIDY4Mi01!5e0!3m2!1sko!2skr!4v1688200000000!5m2!1sko!2skr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <p class="mt-2 font-bold">경기도 이천시 부발읍 아미리 682-5</p>
+                <p class="mt-1 text-blue-600 font-bold">T. 031.632.5100</p>
+                <div class="page-number">10</div>
+            </div>
+        </div>
     </div>
 
     <button id="prev-btn" class="nav-btn">‹</button>
@@ -95,6 +140,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 $(function() {
     // 시작 버튼 클릭
@@ -108,25 +154,29 @@ $(function() {
             alert('모든 정보를 입력해주세요.');
             return;
         }
-        // 정보 요약 출력
         $('#info-summary').html(
             `이름: ${name}<br>전화번호: ${phone}<br>관심지역: ${area}<br>목적: ${purpose}<br>관심유형: ${interest}`
         );
-        // 폼 숨기고 플립북 노출
         $('#cover-form').hide();
         $('#flipbook-container').show();
-        // 플립북 초기화
-        $('#flipbook').turn({
-            display: 'single',
-            width: '100%',
-            height: '100%',
-            autoCenter: true
-        });
+        $('#flipbook').turn({ display: 'single', width: '100%', height: '100%', autoCenter: true, when: {
+            turned: function(event, page) {
+                if (page === 3) renderPriceChart();
+            }
+        }});
     });
 
-    // 이전/다음
-    $('#prev-btn').on('click', function() { $('#flipbook').turn('previous'); });
-    $('#next-btn').on('click', function() { $('#flipbook').turn('next'); });
+    // 차트 렌더링
+    function renderPriceChart() {
+        if (window.chartRendered) return;
+        window.chartRendered = true;
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, { type: 'bar', data: { labels: ['자이 더 파크','롯데캐슬 페라즈','에피트'], datasets:[{label:'84㎡ 분양가(억원)',data:[5.2,5.8,6.1],borderRadius:5}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'억원'}}}} });
+    }
+
+    // 네비게이션
+    $('#prev-btn').on('click', ()=>$('#flipbook').turn('previous'));
+    $('#next-btn').on('click', ()=>$('#flipbook').turn('next'));
 });
 </script>
 
