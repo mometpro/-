@@ -115,6 +115,9 @@
                 <h1 class="font-['Gowun+Dodum'] text-2xl md:text-3xl font-semibold leading-snug drop-shadow-md">
                     이천 부발역 에피트<br>프리미엄 브로슈어
                 </h1>
+                <div class="absolute bottom-8 left-8 text-white/70 text-xs font-gowun md:hidden">
+                    <p>페이지의 모서리를 드래그하여<br>책장을 넘겨보세요.</p>
+                </div>
             </div>
         </div>
         
@@ -256,14 +259,12 @@
 </div>
 
 <script>
-    // Wait for the entire page to load, including images
-    $(window).on('load', function() {
+    // Using jQuery's document ready shorthand
+    $(function() {
         const flipbook = $('#flipbook');
 
-        // Function to resize the flipbook to fit the container
         function resizeFlipbook() {
             const container = $('#flipbook-container');
-            // A4-like portrait aspect ratio
             const aspectRatio = 0.707; 
 
             const maxWidth = container.width() * 0.95;
@@ -277,23 +278,21 @@
                 bookHeight = bookWidth / aspectRatio;
             }
             
-            // Ensure flipbook is initialized before resizing
             if (flipbook.data('turn')) {
                 flipbook.turn('size', bookWidth, bookHeight);
             }
         }
 
-        // Initialize the flipbook
         flipbook.turn({
             display: 'single',
-            width: 1, // Initial dummy size
+            width: 1,
             height: 1,
             elevation: 50,
+            acceleration: true,
             gradients: true,
             autoCenter: true,
             when: {
                 turned: function(event, page, view) {
-                    // Render chart when its page is visible
                     if (page === 4) { 
                         renderPriceChartOnce();
                     }
@@ -301,11 +300,9 @@
             }
         });
 
-        // Set initial size and bind resize event
         resizeFlipbook();
         $(window).on('resize', resizeFlipbook);
 
-        // Navigation button handlers
         $('#prev-btn').on('click', function(e) {
             e.preventDefault();
             flipbook.turn('previous');
@@ -316,7 +313,6 @@
             flipbook.turn('next');
         });
 
-        // Chart rendering logic
         let chartRendered = false;
         function renderPriceChartOnce() {
             if (chartRendered) return;
@@ -350,3 +346,4 @@
 
 </body>
 </html>
+```</immersive>
