@@ -50,6 +50,15 @@
             flex-direction: column;
             overflow: hidden;
             transition: all 0.3s ease-in-out;
+            position: relative;
+        }
+        
+        /* Persistent Logo */
+        .persistent-logo {
+            position: absolute;
+            top: 1rem;
+            left: 1.5rem;
+            z-index: 50;
         }
 
         /* Header for page progress */
@@ -247,6 +256,9 @@
 <!-- Brochure App (Initially hidden) -->
 <div id="brochure-app" class="app-container hidden">
     <div id="content-viewer" class="content-viewer">
+        <div class="persistent-logo">
+            <img src="boonyangcok.png" alt="분양콕 로고" class="h-8 opacity-75">
+        </div>
         <!-- Header with Progress Bar -->
         <div id="page-header">
             <div id="progress-bar-container">
@@ -276,15 +288,21 @@
                 <h2 class="section-title">압도적 입지</h2>
                 <p class="section-subtitle">이천의 모든 가치가 모이는 중심</p>
                 <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
-                <div class="mt-4 text-center bg-gray-50 p-4 rounded-lg">
-                    <p class="font-bold text-gray-800">사업지 주소: 경기도 이천시 부발읍 아미리 682-5</p>
-                    <p class="text-sm text-indigo-600 font-semibold mt-1">경강선 부발역(KTX) 도보 5분 초역세권</p>
+                <div class="mt-4 space-y-2">
+                    <div class="text-center bg-gray-50 p-3 rounded-lg">
+                        <p class="font-bold text-gray-800">사업지 주소</p>
+                        <p class="text-sm text-gray-600">경기도 이천시 부발읍 아미리 682-5</p>
+                    </div>
+                    <div class="text-center bg-indigo-50 p-3 rounded-lg">
+                        <p class="font-bold text-indigo-800">핵심 입지</p>
+                        <p class="text-sm text-indigo-600">경강선 부발역(KTX) 도보 5분 & SK하이닉스 바로 앞</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Page 3: Premium -->
-            <div class="page" data-page-name="프리미엄">
-                <img src="imgi_2_premium_img.jpg" alt="프리미엄 9" class="w-full h-auto rounded-lg">
+            <div class="page flex items-center justify-center" data-page-name="프리미엄">
+                <img src="imgi_2_premium_img.jpg" alt="프리미엄 9" class="w-full h-auto object-contain max-h-full">
             </div>
             
             <!-- Page 4: Education (Seoul Univ) -->
@@ -293,8 +311,8 @@
                 <p class="section-subtitle">자녀의 미래를 위한 최고의 선택</p>
                 <div class="flex flex-col items-center text-center">
                     <img src="imgi_1_pop250407.jpg" alt="에듀 프리미엄" class="max-w-xs w-full rounded-lg shadow-md">
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold text-gray-800">서울대 멘토 교육 프로그램</h3>
+                    <div class="p-4 mt-2 bg-amber-50 rounded-lg">
+                        <h3 class="text-xl font-bold text-amber-800">서울대 멘토 교육 프로그램</h3>
                         <p class="text-gray-600 text-base mt-2">안전한 도보 통학권의 초/중/고교는 기본,<br>에피트만의 특별한 교육 혜택까지 누립니다.</p>
                     </div>
                 </div>
@@ -351,15 +369,21 @@
             <!-- Page 7: Subscription Info -->
             <div class="page" data-page-name="청약 정보">
                 <h2 class="section-title">청약 안내</h2>
-                <p class="section-subtitle">높은 관심 속, 성공적인 청약 마감</p>
                 <div class="flex flex-col items-center gap-4">
-                    <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full max-w-sm rounded-lg shadow-md">
-                    <img src="imgi_5_pop250627.png" alt="청약 조건" class="w-full max-w-sm rounded-lg shadow-md">
+                    <div class="w-full max-w-sm text-center">
+                        <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full rounded-lg shadow-md">
+                        <p class="text-sm text-gray-600 mt-2 bg-gray-100 p-2 rounded-md">최고 40:1의 높은 경쟁률로<br>성공적으로 청약을 마감했습니다.</p>
+                    </div>
+                    <div class="w-full max-w-sm text-center">
+                        <img src="imgi_5_pop250627.png" alt="청약 조건" class="w-full rounded-lg shadow-md object-cover">
+                    </div>
                 </div>
             </div>
 
             <!-- Page 8: Rights Transfer -->
-            <div class="page" data-page-name="권리의무 승계">
+            <div class="page flex flex-col items-center justify-center" data-page-name="권리의무 승계">
+                 <h2 class="section-title">권리의무 승계 안내</h2>
+                <p class="section-subtitle">일정을 확인하시고 착오 없으시길 바랍니다.</p>
                 <div class="flex justify-center">
                     <img src="imgi_4_pop250623.jpg" alt="권리의무 승계 안내" class="w-full max-w-sm rounded-lg shadow-md">
                 </div>
@@ -380,6 +404,12 @@
                 <h2 class="section-title">UNIT 84A</h2>
                 <p class="section-subtitle">가장 선호도 높은 4Bay 판상형 구조</p>
                 <img src="imgi_3_unit_84a_img02.jpg" alt="84A 평면도" class="w-full h-auto rounded-md">
+                <div class="grid grid-cols-2 gap-2 text-center mt-3">
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-ruler-combined text-indigo-500 mr-1"></i> 4-Bay 판상형</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-wind text-indigo-500 mr-1"></i> 맞통풍 구조</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-door-open text-indigo-500 mr-1"></i> 대형 드레스룸</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-box-archive text-indigo-500 mr-1"></i> 팬트리</div>
+                </div>
             </div>
             
             <!-- Page 11: Unit 84B -->
@@ -387,13 +417,25 @@
                 <h2 class="section-title">UNIT 84B</h2>
                 <p class="section-subtitle">효율적인 공간 구성의 실속 평면</p>
                 <img src="imgi_3_unit_84b_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
+                <div class="grid grid-cols-2 gap-2 text-center mt-3">
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-building text-indigo-500 mr-1"></i> 타워형 구조</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-mountain-sun text-indigo-500 mr-1"></i> 2면 개방 조망</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-door-open text-indigo-500 mr-1"></i> 안방 드레스룸</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-maximize text-indigo-500 mr-1"></i> 넓은 거실</div>
+                </div>
             </div>
 
             <!-- Page 12: Unit 84C -->
             <div class="page" data-page-name="UNIT 84C">
-                <h2 class="section-title">넓은 개방감과 쾌적함을 선사하는 평면</h2>
-                <p class="section-subtitle"></p>
+                <h2 class="section-title">UNIT 84C</h2>
+                <p class="section-subtitle">넓은 개방감과 쾌적함을 선사하는 평면</p>
                 <img src="imgi_3_unit_84c_img02.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
+                 <div class="grid grid-cols-2 gap-2 text-center mt-3">
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-ruler-combined text-indigo-500 mr-1"></i> 3면 개방 판상형</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-plus text-indigo-500 mr-1"></i> 알파룸 제공</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-door-open text-indigo-500 mr-1"></i> 대형 드레스룸</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-box-archive text-indigo-500 mr-1"></i> 팬트리</div>
+                </div>
             </div>
 
             <!-- Page 13: Unit 84D -->
@@ -401,6 +443,12 @@
                 <h2 class="section-title">UNIT 84D</h2>
                 <p class="section-subtitle">다양한 라이프스타일을 담는 감각적인 평면</p>
                 <img src="imgi_3_unit_84d_img02.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
+                <div class="grid grid-cols-2 gap-2 text-center mt-3">
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-building text-indigo-500 mr-1"></i> 타워형 구조</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-person-shelter text-indigo-500 mr-1"></i> 독립적 자녀방</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-door-open text-indigo-500 mr-1"></i> 안방 드레스룸</div>
+                    <div class="bg-gray-100 p-2 rounded-lg"><i class="fa-solid fa-sun text-indigo-500 mr-1"></i> LDK 구조</div>
+                </div>
             </div>
             
             <!-- Page 14: Back Cover -->
