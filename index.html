@@ -235,20 +235,20 @@
         <form id="customer-form" class="space-y-4 flex-grow">
             <div>
                 <label for="name" class="form-label">이름</label>
-                <input type="text" id="name" name="name" class="form-input" required>
+                <input type="text" id="name" name="name" class="form-input">
             </div>
             <div>
                 <label for="phone" class="form-label">전화번호</label>
-                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678" required>
+                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678">
             </div>
             <div>
                 <label for="region" class="form-label">관심지역</label>
-                <input type="text" id="region" name="region" class="form-input" required>
+                <input type="text" id="region" name="region" class="form-input">
             </div>
             <div>
                 <label class="form-label">거래목적</label>
                 <div class="grid grid-cols-2 gap-2 radio-group">
-                    <input type="radio" name="purpose" id="purpose-invest" value="investment" class="sr-only" required>
+                    <input type="radio" name="purpose" id="purpose-invest" value="investment" class="sr-only">
                     <label for="purpose-invest">투자</label>
                     <input type="radio" name="purpose" id="purpose-reside" value="residence" class="sr-only">
                     <label for="purpose-reside">실거주</label>
@@ -257,7 +257,7 @@
             <div>
                 <label class="form-label">관심유형</label>
                 <div class="grid grid-cols-3 gap-2 radio-group">
-                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only" required>
+                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only">
                     <label for="type-apt">아파트</label>
                     <input type="radio" name="type" id="type-op" value="officetel" class="sr-only">
                     <label for="type-op">오피스텔</label>
@@ -273,7 +273,7 @@
             </div>
             <div class="pt-2">
                 <div class="flex items-center">
-                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" required>
+                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                     <label for="consent" class="ml-2 block text-sm text-gray-700">개인정보 수집 및 이용에 동의합니다.</label>
                 </div>
             </div>
@@ -509,10 +509,12 @@
                 <div class="text-center">
                     <h2 class="section-title">오시는 길</h2>
                     <p class="text-gray-600 text-base mb-4">모델하우스에서 에피트의 가치를 직접 확인하세요.</p>
-                    <div class="w-full h-48 md:h-64 rounded-lg overflow-hidden shadow-lg">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3183.332349072412!2d127.46465807641864!3d37.26466397213205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b779a8e251e6d%3A0x7d286121f0447333!2z6rK96riw64-EIOydvOymjOydgCDrsJXrsKn7J64g7JWE66-466GcIDY4My00!5e0!3m2!1sko!2skr!4v1720251141381!5m2!1sko!2skr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                    <p class="text-base font-bold mt-4">경기도 이천시 부발읍 아미리 682-5</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=경기도+이천시+부발읍+아미리+682-5" target="_blank" class="block w-full h-48 md:h-64 rounded-lg overflow-hidden shadow-lg relative">
+                        <iframe src="https://maps.google.com/maps?q=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%9D%B4%EC%B2%9C%EC%8B%9C%20%EB%B6%80%EB%B0%9C%EC%9D%8D%20%EC%95%84%EB%AF%B8%EB%A6%AC%20682-5&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                         <div class="absolute inset-0 bg-transparent"></div>
+                    </a>
+                    <p class="text-sm text-gray-500 mt-2">지도를 클릭하시면 길찾기 서비스로 연결됩니다.</p>
+                    <p class="text-base font-bold mt-2">경기도 이천시 부발읍 아미리 682-5</p>
                     <p class="text-xl font-bold mt-2 text-indigo-600">T. 031.632.5100</p>
                 </div>
             </div>
