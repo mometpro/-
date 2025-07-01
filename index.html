@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         /* Basic setup for the body and fonts */
         body, html {
@@ -15,14 +16,18 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #f0f2f5; /* A light, neutral background */
+            background-color: #f0f2f5;
             font-family: 'Noto Sans KR', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
+        .hidden {
+            display: none;
+        }
+
         /* Main container for the app-like interface */
-        #app-container {
+        .app-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,13 +38,13 @@
         }
 
         /* The white card that holds the content */
-        #content-viewer {
+        .content-viewer {
             width: 100%;
-            max-width: 480px; /* Optimal width for readability */
+            max-width: 480px;
             height: 100%;
             max-height: 800px;
             background-color: white;
-            border-radius: 1.5rem; /* Softer, modern corners */
+            border-radius: 1.5rem;
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
             display: flex;
             flex-direction: column;
@@ -87,7 +92,7 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-            transform: translateX(20px); /* Start off-screen to the right */
+            transform: translateX(20px);
         }
         
         .page.active {
@@ -97,7 +102,7 @@
         }
         
         .page.exiting {
-            transform: translateX(-20px); /* Exit to the left */
+            transform: translateX(-20px);
         }
 
         /* Navigation buttons styling */
@@ -145,12 +150,103 @@
         .hero-gradient {
             background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.1));
         }
+
+        /* Form styling */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .radio-group input:checked + label {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
-<div id="app-container">
-    <div id="content-viewer">
+<!-- Landing Page for Customer Info -->
+<div id="landing-page" class="app-container">
+    <div class="content-viewer p-6 md:p-8 flex flex-col">
+        <div class="text-center mb-6">
+            <img src="imgi_6_logo.png" alt="에피트 로고" class="w-32 mx-auto mb-2">
+            <h1 class="text-2xl font-bold text-gray-800">관심고객 등록</h1>
+            <p class="text-gray-500 mt-1">정보를 입력하시면 브로슈어를 보실 수 있습니다.</p>
+        </div>
+        <form id="customer-form" class="space-y-4 flex-grow">
+            <div>
+                <label for="name" class="form-label">이름</label>
+                <input type="text" id="name" name="name" class="form-input" required>
+            </div>
+            <div>
+                <label for="phone" class="form-label">전화번호</label>
+                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678" required>
+            </div>
+            <div>
+                <label for="region" class="form-label">관심지역</label>
+                <input type="text" id="region" name="region" class="form-input" required>
+            </div>
+            <div>
+                <label class="form-label">거래목적</label>
+                <div class="grid grid-cols-2 gap-2 radio-group">
+                    <input type="radio" name="purpose" id="purpose-invest" value="investment" class="sr-only" required>
+                    <label for="purpose-invest">투자</label>
+                    <input type="radio" name="purpose" id="purpose-reside" value="residence" class="sr-only">
+                    <label for="purpose-reside">실거주</label>
+                </div>
+            </div>
+            <div>
+                <label class="form-label">관심유형</label>
+                <div class="grid grid-cols-2 gap-2 radio-group">
+                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only" required>
+                    <label for="type-apt">아파트</label>
+                    <input type="radio" name="type" id="type-op" value="officetel" class="sr-only">
+                    <label for="type-op">오피스텔</label>
+                </div>
+            </div>
+            <div class="pt-2">
+                <div class="flex items-center">
+                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" required>
+                    <label for="consent" class="ml-2 block text-sm text-gray-700">개인정보 수집 및 이용에 동의합니다.</label>
+                </div>
+            </div>
+            <div class="pt-4">
+                <button type="submit" id="submit-btn" class="w-full nav-button" disabled>브로슈어 보기</button>
+            </div>
+        </form>
+        <div class="mt-6 text-center">
+            <img src="boonyangcok.png" alt="분양콕 로고" class="h-8 mx-auto">
+        </div>
+    </div>
+</div>
+
+<!-- Brochure App (Initially hidden) -->
+<div id="brochure-app" class="app-container hidden">
+    <div id="content-viewer" class="content-viewer">
         <!-- Header with Progress Bar -->
         <div id="page-header">
             <div id="progress-bar-container">
@@ -180,46 +276,19 @@
                 <h2 class="section-title">압도적 입지</h2>
                 <p class="section-subtitle">이천의 모든 가치가 모이는 중심</p>
                 <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
+                <div class="mt-4 text-center bg-gray-50 p-4 rounded-lg">
+                    <p class="font-bold text-gray-800">사업지 주소: 경기도 이천시 부발읍 아미리 682-5</p>
+                    <p class="text-sm text-indigo-600 font-semibold mt-1">경강선 부발역(KTX) 도보 5분 초역세권</p>
+                </div>
             </div>
 
             <!-- Page 3: Premium -->
             <div class="page" data-page-name="프리미엄">
-                <h2 class="section-title">PREMIUM 9</h2>
-                <p class="section-subtitle">에피트가 자랑하는 9가지 특별한 가치</p>
                 <img src="imgi_2_premium_img.jpg" alt="프리미엄 9" class="w-full h-auto rounded-lg">
             </div>
-
-            <!-- Page 4: Subscription Info -->
-            <div class="page" data-page-name="청약 정보">
-                <h2 class="section-title">청약 안내</h2>
-                <p class="section-subtitle">높은 관심 속, 성공적인 청약 마감</p>
-                <div class="flex flex-col items-center gap-4">
-                    <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full max-w-sm rounded-lg shadow-md">
-                    <img src="imgi_5_pop250627.png" alt="청약 조건" class="w-full max-w-sm rounded-lg shadow-md">
-                </div>
-            </div>
-
-            <!-- Page 5: Rights Transfer -->
-            <div class="page" data-page-name="권리의무 승계">
-                <h2 class="section-title">권리의무 승계 안내</h2>
-                <p class="section-subtitle">전매 등 승계 일정을 확인하세요</p>
-                <div class="flex justify-center">
-                    <img src="imgi_4_pop250623.jpg" alt="권리의무 승계 안내" class="w-full max-w-sm rounded-lg shadow-md">
-                </div>
-            </div>
-
-            <!-- Page 6: Price -->
-            <div class="page" data-page-name="분양가">
-                <h2 class="section-title">합리적 분양가</h2>
-                <p class="section-subtitle">주변 단지 대비 높은 가치, 현명한 선택</p>
-                <div class="w-full h-3/4 min-h-[300px]">
-                    <canvas id="priceChart"></canvas>
-                </div>
-                <p class="text-center mt-4 text-sm text-gray-500">※ 84㎡, 20층 이상 기준</p>
-            </div>
             
-            <!-- Page 7: Education -->
-            <div class="page" data-page-name="교육">
+            <!-- Page 4: Education (Seoul Univ) -->
+            <div class="page" data-page-name="교육 특화">
                 <h2 class="section-title">명품 교육 환경</h2>
                 <p class="section-subtitle">자녀의 미래를 위한 최고의 선택</p>
                 <div class="flex flex-col items-center text-center">
@@ -231,7 +300,42 @@
                 </div>
             </div>
 
-            <!-- Page 8: Life Infrastructure -->
+            <!-- Page 5: Education (Infographic) -->
+            <div class="page" data-page-name="주변 학군">
+                 <h2 class="section-title">안심 통학 학군</h2>
+                <p class="section-subtitle">단지 가까이 위치한 우수 교육시설</p>
+                <div class="space-y-4">
+                    <div class="flex items-center bg-blue-50 p-4 rounded-lg">
+                        <div class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mr-4 shrink-0">
+                            <i class="fa-solid fa-school fa-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-blue-800">아미초등학교</h3>
+                            <p class="text-sm text-blue-600">도보 10분 거리의 안전한 통학환경</p>
+                        </div>
+                    </div>
+                     <div class="flex items-center bg-green-50 p-4 rounded-lg">
+                        <div class="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center mr-4 shrink-0">
+                            <i class="fa-solid fa-graduation-cap fa-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-green-800">효양중학교 & 효양고등학교</h3>
+                            <p class="text-sm text-green-600">단지 인근에 위치한 명문 중/고등학교</p>
+                        </div>
+                    </div>
+                     <div class="flex items-center bg-purple-50 p-4 rounded-lg">
+                        <div class="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mr-4 shrink-0">
+                           <i class="fa-solid fa-book-open-reader fa-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-purple-800">시립도서관 및 학원가</h3>
+                            <p class="text-sm text-purple-600">풍부한 교육 인프라 형성</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 6: Life Infrastructure -->
             <div class="page" data-page-name="생활 인프라">
                 <h2 class="section-title">완벽한 생활 인프라</h2>
                 <p class="section-subtitle">쇼핑, 문화, 자연, 배송까지 편리하게</p>
@@ -244,35 +348,62 @@
                 </div>
             </div>
 
-            <!-- Page 9: Unit 84A -->
+            <!-- Page 7: Subscription Info -->
+            <div class="page" data-page-name="청약 정보">
+                <h2 class="section-title">청약 안내</h2>
+                <p class="section-subtitle">높은 관심 속, 성공적인 청약 마감</p>
+                <div class="flex flex-col items-center gap-4">
+                    <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full max-w-sm rounded-lg shadow-md">
+                    <img src="imgi_5_pop250627.png" alt="청약 조건" class="w-full max-w-sm rounded-lg shadow-md">
+                </div>
+            </div>
+
+            <!-- Page 8: Rights Transfer -->
+            <div class="page" data-page-name="권리의무 승계">
+                <div class="flex justify-center">
+                    <img src="imgi_4_pop250623.jpg" alt="권리의무 승계 안내" class="w-full max-w-sm rounded-lg shadow-md">
+                </div>
+            </div>
+            
+            <!-- Page 9: Price -->
+            <div class="page" data-page-name="주변 시세">
+                <h2 class="section-title">주변 시세 비교</h2>
+                <p class="section-subtitle">인근 단지 대비 뛰어난 가격 경쟁력</p>
+                <div class="w-full h-3/4 min-h-[300px]">
+                    <canvas id="priceChart"></canvas>
+                </div>
+                <p class="text-center mt-4 text-sm text-gray-500">※ 84㎡, 20층 이상 실거래가 기준</p>
+            </div>
+
+            <!-- Page 10: Unit 84A -->
             <div class="page" data-page-name="UNIT 84A">
                 <h2 class="section-title">UNIT 84A</h2>
                 <p class="section-subtitle">가장 선호도 높은 4Bay 판상형 구조</p>
                 <img src="imgi_3_unit_84a_img02.jpg" alt="84A 평면도" class="w-full h-auto rounded-md">
             </div>
             
-            <!-- Page 10: Unit 84B -->
+            <!-- Page 11: Unit 84B -->
             <div class="page" data-page-name="UNIT 84B">
                 <h2 class="section-title">UNIT 84B</h2>
                 <p class="section-subtitle">효율적인 공간 구성의 실속 평면</p>
                 <img src="imgi_3_unit_84b_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
             </div>
 
-            <!-- Page 11: Unit 84C -->
+            <!-- Page 12: Unit 84C -->
             <div class="page" data-page-name="UNIT 84C">
-                <h2 class="section-title">UNIT 84C</h2>
-                <p class="section-subtitle">넓은 개방감과 쾌적함을 선사하는 평면</p>
+                <h2 class="section-title">넓은 개방감과 쾌적함을 선사하는 평면</h2>
+                <p class="section-subtitle"></p>
                 <img src="imgi_3_unit_84c_img02.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
             </div>
 
-            <!-- Page 12: Unit 84D -->
+            <!-- Page 13: Unit 84D -->
             <div class="page" data-page-name="UNIT 84D">
                 <h2 class="section-title">UNIT 84D</h2>
                 <p class="section-subtitle">다양한 라이프스타일을 담는 감각적인 평면</p>
                 <img src="imgi_3_unit_84d_img02.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
             </div>
             
-            <!-- Page 13: Back Cover -->
+            <!-- Page 14: Back Cover -->
             <div class="page" data-page-name="오시는 길">
                 <div class="text-center">
                     <h2 class="section-title">오시는 길</h2>
@@ -288,7 +419,7 @@
     </div>
 
     <!-- Navigation Area -->
-    <div class="mt-6 flex gap-4 items-center">
+    <div id="navigation-controls" class="mt-6 flex gap-4 items-center hidden">
         <button id="prev-btn" class="nav-button">&lt; 이전</button>
         <div id="page-indicator" class="text-sm text-gray-600 w-24 text-center"></div>
         <button id="next-btn" class="nav-button">다음 &gt;</button>
@@ -297,132 +428,150 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- DOM Element Selection ---
-        const pages = document.querySelectorAll('.page');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const progressBar = document.getElementById('progress-bar');
-        const pageIndicator = document.getElementById('page-indicator');
-        
-        // --- State Management ---
-        let currentPageIndex = 0;
-        let chartRendered = false; // Flag to ensure chart renders only once
+        // --- Element Selections ---
+        const landingPage = document.getElementById('landing-page');
+        const brochureApp = document.getElementById('brochure-app');
+        const customerForm = document.getElementById('customer-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formInputs = customerForm.querySelectorAll('input');
+        const navigationControls = document.getElementById('navigation-controls');
 
-        // --- Functions ---
+        // --- Form Validation Logic ---
+        function validateForm() {
+            const isNameValid = document.getElementById('name').value.trim() !== '';
+            const isPhoneValid = document.getElementById('phone').value.trim() !== '';
+            const isRegionValid = document.getElementById('region').value.trim() !== '';
+            const isPurposeValid = customerForm.querySelector('input[name="purpose"]:checked');
+            const isTypeValid = customerForm.querySelector('input[name="type"]:checked');
+            const isConsentChecked = document.getElementById('consent').checked;
+            
+            submitBtn.disabled = !(isNameValid && isPhoneValid && isRegionValid && isPurposeValid && isTypeValid && isConsentChecked);
+        }
 
-        /**
-         * Main function to display a page by its index.
-         * Handles animations, button states, progress bar, and page indicator.
-         * @param {number} index - The index of the page to show.
-         */
-        function showPage(index) {
-            const oldPageIndex = currentPageIndex;
-            currentPageIndex = index;
+        formInputs.forEach(input => {
+            input.addEventListener('input', validateForm);
+            input.addEventListener('change', validateForm);
+        });
 
-            // Animate out the old page
-            if (pages[oldPageIndex] && oldPageIndex !== index) {
-                pages[oldPageIndex].classList.add('exiting');
+        // --- Form Submission Logic ---
+        customerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!submitBtn.disabled) {
+                // Here you would typically send the form data to a server.
+                // For this demo, we'll just proceed to the brochure.
+                console.log('Form submitted!');
+                
+                landingPage.classList.add('hidden');
+                brochureApp.classList.remove('hidden');
+                navigationControls.classList.remove('hidden');
+                navigationControls.classList.add('flex');
+                
+                initBrochure();
             }
+        });
 
-            // Update all pages' active status
-            pages.forEach((page, i) => {
-                if (i === index) {
-                    // Use a short timeout to allow the exit animation to start
-                    setTimeout(() => {
-                        page.classList.remove('exiting');
-                        page.classList.add('active');
-                    }, 50);
-                } else {
-                    page.classList.remove('active');
+        // --- Brochure Initialization Logic ---
+        function initBrochure() {
+            const pages = document.querySelectorAll('.page');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const pageIndicator = document.getElementById('page-indicator');
+            
+            let currentPageIndex = 0;
+            let chartRendered = false;
+
+            function showPage(index) {
+                const oldPageIndex = currentPageIndex;
+                currentPageIndex = index;
+
+                if (pages[oldPageIndex] && oldPageIndex !== index) {
+                    pages[oldPageIndex].classList.add('exiting');
                 }
-            });
-            
-            updateNavigation();
-            
-            // --- Special Page Logic ---
-            // Render the price comparison chart when its page is shown for the first time.
-            // The chart is on the 6th page (index 5).
-            if (index === 5 && !chartRendered) {
-                renderPriceChart();
-                chartRendered = true;
+
+                pages.forEach((page, i) => {
+                    if (i === index) {
+                        setTimeout(() => {
+                            page.classList.remove('exiting');
+                            page.classList.add('active');
+                        }, 50);
+                    } else {
+                        page.classList.remove('active');
+                    }
+                });
+                
+                updateNavigation();
+                
+                // The price chart page is now at index 8
+                if (index === 8 && !chartRendered) {
+                    renderPriceChart();
+                    chartRendered = true;
+                }
             }
-        }
 
-        /**
-         * Updates the state and text of navigation controls (buttons, progress bar).
-         */
-        function updateNavigation() {
-            // Update progress bar
-            const progress = ((currentPageIndex) / (pages.length - 1)) * 100;
-            progressBar.style.width = `${progress}%`;
+            function updateNavigation() {
+                const progress = (currentPageIndex / (pages.length - 1)) * 100;
+                progressBar.style.width = `${progress}%`;
+                const currentPageName = pages[currentPageIndex].dataset.pageName || `페이지 ${currentPageIndex + 1}`;
+                pageIndicator.textContent = `${currentPageName}`;
+                prevBtn.disabled = currentPageIndex === 0;
+                nextBtn.disabled = currentPageIndex === pages.length - 1;
+            }
 
-            // Update page indicator text
-            const currentPageName = pages[currentPageIndex].dataset.pageName || `페이지 ${currentPageIndex + 1}`;
-            pageIndicator.textContent = `${currentPageName}`;
-
-            // Update button disabled state
-            prevBtn.disabled = currentPageIndex === 0;
-            nextBtn.disabled = currentPageIndex === pages.length - 1;
-        }
-
-        /**
-         * Renders the bar chart using Chart.js.
-         */
-        function renderPriceChart() {
-            const ctx = document.getElementById('priceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['이천자이 더 파크', '이천 롯데캐슬 페라즈', '이천 부발역 에피트'],
-                    datasets: [{
-                        label: '84㎡ 분양가 (억원)',
-                        data: [5.2, 5.8, 6.1],
-                        backgroundColor: ['rgba(156, 163, 175, 0.6)', 'rgba(239, 68, 68, 0.6)', 'rgba(59, 130, 246, 0.7)'],
-                        borderColor: ['rgba(156, 163, 175, 1)', 'rgba(239, 68, 68, 1)', 'rgba(59, 130, 246, 1)'],
-                        borderWidth: 1,
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 1500, easing: 'easeInOutQuart' },
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.raw}억원`;
+            function renderPriceChart() {
+                const ctx = document.getElementById('priceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['이천자이 더 파크', '이천 롯데캐슬 페라즈', '이천 부발역 에피트'],
+                        datasets: [{
+                            label: '84㎡ 실거래가 (억원)',
+                            data: [5.2, 5.8, 5.7], // Updated data
+                            backgroundColor: ['rgba(156, 163, 175, 0.6)', 'rgba(239, 68, 68, 0.6)', 'rgba(59, 130, 246, 0.7)'],
+                            borderColor: ['rgba(156, 163, 175, 1)', 'rgba(239, 68, 68, 1)', 'rgba(59, 130, 246, 1)'],
+                            borderWidth: 1,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 1500, easing: 'easeInOutQuart' },
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.raw}억원`;
+                                    }
                                 }
                             }
+                        },
+                        scales: { 
+                            y: { 
+                                beginAtZero: false,
+                                min: 4,
+                                title: { display: true, text: '실거래가 (단위: 억원)' } 
+                            } 
                         }
-                    },
-                    scales: { 
-                        y: { 
-                            beginAtZero: false,
-                            min: 4,
-                            title: { display: true, text: '분양가 (단위: 억원)' } 
-                        } 
                     }
+                });
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPageIndex < pages.length - 1) {
+                    showPage(currentPageIndex + 1);
                 }
             });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPageIndex > 0) {
+                    showPage(currentPageIndex - 1);
+                }
+            });
+
+            showPage(0);
         }
-
-        // --- Event Listeners ---
-        nextBtn.addEventListener('click', () => {
-            if (currentPageIndex < pages.length - 1) {
-                showPage(currentPageIndex + 1);
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentPageIndex > 0) {
-                showPage(currentPageIndex - 1);
-            }
-        });
-
-        // --- Initial Load ---
-        showPage(0); // Show the first page initially
     });
 </script>
 
