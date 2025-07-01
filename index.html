@@ -294,8 +294,8 @@
             <div class="page active flex flex-col justify-center items-center" data-page-name="표지">
                 <a href="https://www.youtube.com/watch?v=DG_xJsOomq8" target="_blank" class="block w-full max-w-md rounded-lg overflow-hidden shadow-lg mb-4 group relative">
                     <img src="thumnail.jpeg" alt="유튜브 영상 썸네일" class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
-                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <i class="fa-solid fa-play text-white text-6xl opacity-80 group-hover:opacity-100 transition-opacity"></i>
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity duration-300 group-hover:opacity-75">
+                        <i class="fa-solid fa-play text-white text-6xl opacity-80 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"></i>
                     </div>
                 </a>
                 <div class="text-center px-2 leading-relaxed">
@@ -572,15 +572,15 @@
             const isNameValid = document.getElementById('name').value.trim() !== '';
             const isPhoneValid = document.getElementById('phone').value.trim() !== '';
             const isRegionValid = document.getElementById('region').value.trim() !== '';
-            const isPurposeValid = customerForm.querySelector('input[name="purpose"]:checked');
-            const isTypeValid = customerForm.querySelector('input[name="type"]:checked');
+            const isPurposeValid = !!customerForm.querySelector('input[name="purpose"]:checked');
+            const isTypeValid = !!customerForm.querySelector('input[name="type"]:checked');
             const isConsentChecked = document.getElementById('consent').checked;
             
             submitBtn.disabled = !(isNameValid && isPhoneValid && isRegionValid && isPurposeValid && isTypeValid && isConsentChecked);
         }
 
         customerForm.addEventListener('input', validateForm);
-        customerForm.addEventListener('change', validateForm); // Add change listener for radios/checkboxes
+        customerForm.addEventListener('change', validateForm);
         
         // --- Form Submission Logic ---
         customerForm.addEventListener('submit', (e) => {
