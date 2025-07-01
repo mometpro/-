@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이천 부발역 에피트 | 인터랙티브 브로슈어</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -121,41 +118,17 @@
             </div>
         </div>
         
-        <!-- Page 1: The Value -->
-        <div class="page">
-            <div class="page-wrapper items-center">
-                <h2 class="section-title-sm">모두가 주목하는 가치</h2>
-                <p class="section-subtitle-sm">뜨거운 관심으로 증명된 에피트의 미래</p>
-                <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="max-w-xs w-full rounded-lg shadow-md">
-                <div class="p-4 text-center">
-                    <h3 class="text-lg font-bold">최고 40:1 청약 경쟁률</h3>
-                    <p class="text-gray-600 text-sm mt-1">시장의 기대를 한 몸에 받은 압도적인 관심</p>
-                </div>
-                <div class="page-number">1</div>
-            </div>
-        </div>
-
-        <!-- Page 2: The Premium -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">PREMIUM 9</h2>
-                <p class="section-subtitle-sm">일상의 모든 순간이 특별해지는 9가지 프리미엄</p>
-                <img src="imgi_2_premium_img.jpg" alt="에피트 프리미엄 9가지" class="w-full h-auto">
-                <div class="page-number">2</div>
-            </div>
-        </div>
-
-        <!-- Page 3: The Location -->
+        <!-- Page 1: Location -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">압도적 입지</h2>
                 <p class="section-subtitle-sm">이천의 모든 가치가 모이는 중심</p>
                 <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
-                <div class="page-number">3</div>
+                <div class="page-number">1</div>
             </div>
         </div>
 
-        <!-- Page 4: The Price -->
+        <!-- Page 2: Price -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">합리적 분양가</h2>
@@ -164,11 +137,11 @@
                     <canvas id="priceChart"></canvas>
                 </div>
                 <p class="text-center mt-2 text-xs text-gray-500">※ 84㎡, 20층 이상 기준</p>
-                <div class="page-number">4</div>
+                <div class="page-number">2</div>
             </div>
         </div>
         
-        <!-- Page 5: The Education -->
+        <!-- Page 3: Education -->
         <div class="page">
              <div class="page-wrapper items-center">
                  <h2 class="section-title-sm">명품 교육 환경</h2>
@@ -178,11 +151,11 @@
                     <h3 class="text-lg font-bold">서울대 멘토 교육 프로그램</h3>
                     <p class="text-gray-600 text-sm mt-1">안전한 도보 통학권의 초/중/고교는 기본,<br>에피트만의 특별한 교육 혜택까지 누립니다.</p>
                 </div>
-                 <div class="page-number">5</div>
+                 <div class="page-number">3</div>
             </div>
         </div>
 
-        <!-- Page 6: The Life -->
+        <!-- Page 4: Life Infrastructure -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">완벽한 생활 인프라</h2>
@@ -194,47 +167,47 @@
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-teal-100 text-teal-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945C21.055 11 21 11.555 21 12c0 5.523-4.477 10-10 10S1 17.523 1 12c0-.445.055-1 .945-1z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a2 2 0 012 2v6h-4V4a2 2 0 012-2z" /></svg></div><div><h4 class="font-bold text-sm">쾌적한 자연</h4><p class="text-xs text-gray-600">단지 앞 어린이공원, 효양산</p></div></div>
                     <div class="bg-orange-50 p-4 rounded-lg flex items-center space-x-4 mt-8"><div class="bg-orange-100 text-orange-700 p-3 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div><div><h4 class="font-bold">빠른 배송 생활권</h4><p class="text-sm text-gray-600">쿠팡, 마켓컬리 등 새벽/당일배송 이용</p></div></div>
                 </div>
-                <div class="page-number">6</div>
+                <div class="page-number">4</div>
             </div>
         </div>
 
-        <!-- Page 7: Unit 84A -->
+        <!-- Page 5: Unit 84A -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84A</h2>
                 <p class="section-subtitle-sm">가장 선호도 높은 4Bay 판상형 구조</p>
                 <img src="imgi_3_unit_84a_img02.jpg" alt="84A 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">7</div>
+                <div class="page-number">5</div>
             </div>
         </div>
         
-        <!-- Page 8: Unit 84B -->
+        <!-- Page 6: Unit 84B -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84B</h2>
                 <p class="section-subtitle-sm">효율적인 공간 구성의 실속 평면</p>
                 <img src="imgi_3_unit_84b_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">8</div>
+                <div class="page-number">6</div>
             </div>
         </div>
 
-        <!-- Page 9: Unit 84C -->
+        <!-- Page 7: Unit 84C -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84C</h2>
                 <p class="section-subtitle-sm">넓은 개방감과 쾌적함을 선사하는 평면</p>
                 <img src="imgi_3_unit_84c_img02.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">9</div>
+                <div class="page-number">7</div>
             </div>
         </div>
 
-        <!-- Page 10: Unit 84D -->
+        <!-- Page 8: Unit 84D -->
         <div class="page">
             <div class="page-wrapper">
                 <h2 class="section-title-sm">UNIT 84D</h2>
                 <p class="section-subtitle-sm">다양한 라이프스타일을 담는 감각적인 평면</p>
                 <img src="imgi_3_unit_84d_img02.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">10</div>
+                <div class="page-number">8</div>
             </div>
         </div>
         
@@ -258,6 +231,9 @@
     <button id="next-btn">다음 &gt;</button>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Using jQuery's document ready shorthand
     $(function() {
@@ -293,7 +269,7 @@
             autoCenter: true,
             when: {
                 turned: function(event, page, view) {
-                    if (page === 4) { 
+                    if (page === 2) { 
                         renderPriceChartOnce();
                     }
                 }
@@ -346,4 +322,3 @@
 
 </body>
 </html>
-```</immersive>
