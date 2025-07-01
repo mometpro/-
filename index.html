@@ -235,20 +235,20 @@
         <form id="customer-form" class="space-y-4 flex-grow">
             <div>
                 <label for="name" class="form-label">이름</label>
-                <input type="text" id="name" name="name" class="form-input" required>
+                <input type="text" id="name" name="name" class="form-input">
             </div>
             <div>
                 <label for="phone" class="form-label">전화번호</label>
-                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678" required>
+                <input type="tel" id="phone" name="phone" class="form-input" placeholder="010-1234-5678">
             </div>
             <div>
                 <label for="region" class="form-label">관심지역</label>
-                <input type="text" id="region" name="region" class="form-input" required>
+                <input type="text" id="region" name="region" class="form-input">
             </div>
             <div>
                 <label class="form-label">관심유형</label>
                 <div class="grid grid-cols-3 gap-2 radio-group">
-                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only" required>
+                    <input type="radio" name="type" id="type-apt" value="apartment" class="sr-only">
                     <label for="type-apt">아파트</label>
                     <input type="radio" name="type" id="type-op" value="officetel" class="sr-only">
                     <label for="type-op">오피스텔</label>
@@ -264,7 +264,7 @@
             </div>
             <div class="pt-2">
                 <div class="flex items-center">
-                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" required>
+                    <input id="consent" name="consent" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                     <label for="consent" class="ml-2 block text-sm text-gray-700">개인정보 수집 및 이용에 동의합니다.</label>
                 </div>
             </div>
@@ -535,7 +535,6 @@
         const brochureApp = document.getElementById('brochure-app');
         const customerForm = document.getElementById('customer-form');
         const submitBtn = document.getElementById('submit-btn');
-        const formInputs = customerForm.querySelectorAll('input');
         const navigationControls = document.getElementById('navigation-controls');
         const counselorBtn = document.getElementById('counselor-btn');
         const counselorPopup = document.getElementById('counselor-popup');
@@ -580,11 +579,9 @@
             submitBtn.disabled = !(isNameValid && isPhoneValid && isRegionValid && isPurposeValid && isTypeValid && isConsentChecked);
         }
 
-        formInputs.forEach(input => {
-            input.addEventListener('input', validateForm);
-            input.addEventListener('change', validateForm);
-        });
-
+        customerForm.addEventListener('input', validateForm);
+        customerForm.addEventListener('change', validateForm); // Add change listener for radios/checkboxes
+        
         // --- Form Submission Logic ---
         customerForm.addEventListener('submit', (e) => {
             e.preventDefault();
