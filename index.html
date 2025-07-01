@@ -29,6 +29,7 @@
         .app-container {
             display: flex;
             flex-direction: column;
+            align-items: center; /* Horizontally center the content */
             width: 100%;
             min-height: 100vh; /* Ensure it takes at least the full viewport height */
             padding: 1rem;
@@ -64,32 +65,27 @@
             max-height: 850px; /* Set a max-height for very tall screens */
         }
         
-        /* Persistent Logo */
-        .persistent-logo {
-            position: absolute;
-            top: 1rem;
-            left: 1.5rem;
-            z-index: 50;
-        }
-
-        /* Header for page progress */
+        /* Header Area */
         #page-header {
+            background-color: #4a5568; /* Dark background for logo visibility */
             padding: 0.75rem 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: center;
             flex-shrink: 0;
+        }
+        
+        .logo-container {
+            padding-bottom: 0.75rem;
         }
 
         #progress-bar-container {
             width: 100%;
-            background-color: #e5e7eb;
+            background-color: #718096;
             border-radius: 9999px;
             height: 6px;
         }
 
         #progress-bar {
             height: 100%;
-            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            background: linear-gradient(to right, #a3bffa, #f6e05e);
             border-radius: 9999px;
             transition: width 0.4s ease-in-out;
         }
@@ -269,11 +265,11 @@
 <!-- Brochure App (Initially hidden) -->
 <div id="brochure-app" class="app-container hidden">
     <div id="content-viewer" class="content-viewer">
-        <div class="persistent-logo">
-            <img src="boonyangcok.png" alt="분양콕 로고" class="h-8 opacity-75">
-        </div>
         <!-- Header with Progress Bar -->
         <div id="page-header">
+            <div class="logo-container">
+                 <img src="boonyangcok.png" alt="분양콕 로고" class="h-8">
+            </div>
             <div id="progress-bar-container">
                 <div id="progress-bar" style="width: 0%;"></div>
             </div>
@@ -314,8 +310,12 @@
             </div>
 
             <!-- Page 3: Premium -->
-            <div class="page flex items-center justify-center" data-page-name="프리미엄">
-                <img src="imgi_2_premium_img.jpg" alt="프리미엄 9" class="w-full h-auto object-contain max-h-full">
+            <div class="page" data-page-name="프리미엄">
+                 <h2 class="section-title">프리미엄</h2>
+                <p class="section-subtitle">에피트가 선사하는 9가지 특별한 가치</p>
+                <div class="flex items-center justify-center flex-grow">
+                    <img src="imgi_2_premium_img.jpg" alt="프리미엄 9" class="w-full h-auto object-contain max-h-full">
+                </div>
             </div>
             
             <!-- Page 4: Education (Seoul Univ) -->
@@ -334,33 +334,41 @@
             <!-- Page 5: Education (Infographic) -->
             <div class="page" data-page-name="주변 학군">
                  <h2 class="section-title">안심 통학 학군</h2>
-                <p class="section-subtitle">단지 가까이 위치한 우수 교육시설</p>
-                <div class="space-y-4">
-                    <div class="flex items-center bg-blue-50 p-4 rounded-lg">
-                        <div class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mr-4 shrink-0">
-                            <i class="fa-solid fa-school fa-lg"></i>
+                <p class="section-subtitle">자녀의 성장을 함께하는 우수한 교육 환경</p>
+                <div class="relative p-4">
+                    <!-- Center Line -->
+                    <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-indigo-200"></div>
+                    
+                    <!-- School 1 -->
+                    <div class="relative mb-8">
+                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-2 border-indigo-500 rounded-full flex items-center justify-center">
+                           <i class="fa-solid fa-school text-indigo-500"></i>
                         </div>
-                        <div>
+                        <div class="w-[calc(50%-2rem)] bg-blue-50 p-3 rounded-lg shadow">
                             <h3 class="font-bold text-blue-800">아미초등학교</h3>
-                            <p class="text-sm text-blue-600">도보 10분 거리의 안전한 통학환경</p>
+                            <p class="text-sm text-blue-600">도보 10분</p>
                         </div>
                     </div>
-                     <div class="flex items-center bg-green-50 p-4 rounded-lg">
-                        <div class="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center mr-4 shrink-0">
-                            <i class="fa-solid fa-graduation-cap fa-lg"></i>
+                    
+                    <!-- School 2 -->
+                     <div class="relative mb-8 flex justify-end">
+                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-2 border-indigo-500 rounded-full flex items-center justify-center">
+                           <i class="fa-solid fa-graduation-cap text-indigo-500"></i>
                         </div>
-                        <div>
-                            <h3 class="font-bold text-green-800">효양중학교 & 효양고등학교</h3>
-                            <p class="text-sm text-green-600">단지 인근에 위치한 명문 중/고등학교</p>
+                        <div class="w-[calc(50%-2rem)] bg-green-50 p-3 rounded-lg shadow text-right">
+                            <h3 class="font-bold text-green-800">효양중 · 고교</h3>
+                            <p class="text-sm text-green-600">이천의 명문 학군</p>
                         </div>
                     </div>
-                     <div class="flex items-center bg-purple-50 p-4 rounded-lg">
-                        <div class="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mr-4 shrink-0">
-                           <i class="fa-solid fa-book-open-reader fa-lg"></i>
+
+                    <!-- Library -->
+                    <div class="relative">
+                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-2 border-indigo-500 rounded-full flex items-center justify-center">
+                           <i class="fa-solid fa-book-open-reader text-indigo-500"></i>
                         </div>
-                        <div>
-                            <h3 class="font-bold text-purple-800">시립도서관 및 학원가</h3>
-                            <p class="text-sm text-purple-600">풍부한 교육 인프라 형성</p>
+                        <div class="w-[calc(50%-2rem)] bg-purple-50 p-3 rounded-lg shadow">
+                            <h3 class="font-bold text-purple-800">시립도서관 & 학원가</h3>
+                            <p class="text-sm text-purple-600">풍부한 교육 인프라</p>
                         </div>
                     </div>
                 </div>
@@ -380,15 +388,15 @@
             </div>
 
             <!-- Page 7: Subscription Info -->
-            <div class="page" data-page-name="청약 정보">
-                <h2 class="section-title">청약 안내</h2>
-                <div class="flex flex-col items-center gap-4">
-                    <div class="w-full max-w-sm text-center">
-                        <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full rounded-lg shadow-md">
-                        <p class="text-sm text-gray-600 mt-2 bg-gray-100 p-2 rounded-md">최고 40:1의 높은 경쟁률로<br>성공적으로 청약을 마감했습니다.</p>
-                    </div>
-                    <div class="w-full max-w-sm text-center">
-                        <img src="imgi_5_pop250627.png" alt="청약 조건" class="w-full rounded-lg shadow-md object-cover">
+            <div class="page flex items-center" data-page-name="청약 정보">
+                <div class="w-full">
+                    <h2 class="section-title">청약 안내</h2>
+                    <p class="section-subtitle">뜨거운 관심 속 청약 마감</p>
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="w-full max-w-sm text-center">
+                            <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full rounded-lg shadow-md">
+                            <p class="text-sm text-gray-600 mt-2 bg-gray-100 p-2 rounded-md">최고 40:1의 높은 경쟁률로<br>성공적으로 청약을 마감했습니다.</p>
+                        </div>
                     </div>
                 </div>
             </div>
