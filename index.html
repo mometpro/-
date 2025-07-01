@@ -2,285 +2,373 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이천 부발역 에피트 | 인터랙티브 브로슈어</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- IMPORTANT: Load jQuery before turn.js -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* Basic setup for the body and fonts */
         body, html {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            height: 100%;
-            background-color: #333;
-        }
-        #flipbook-container {
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
+            background-color: #f0f2f5; /* A light, neutral background */
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        #flipbook .page {
-            background-color: white;
-            background-repeat: no-repeat;
-            background-size: cover;
-            box-shadow: 0 0 20px rgba(0,0,0,0.4);
-        }
-        #flipbook .page-wrapper {
-            padding: 1.5rem;
+
+        /* Main container for the app-like interface */
+        #app-container {
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
+            width: 100%;
             height: 100%;
-            overflow: auto;
+            padding: 1rem;
         }
-        #flipbook .hard {
-             background-color: #f3f4f6;
+
+        /* The white card that holds the content */
+        #content-viewer {
+            width: 100%;
+            max-width: 480px; /* Optimal width for readability */
+            height: 100%;
+            max-height: 800px;
+            background-color: white;
+            border-radius: 1.5rem; /* Softer, modern corners */
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
         }
-        .page-number {
+
+        /* Header for page progress */
+        #page-header {
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        #progress-bar-container {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 6px;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            border-radius: 9999px;
+            transition: width 0.4s ease-in-out;
+        }
+
+        /* Container for the sliding pages */
+        #page-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Individual page styles */
+        .page {
             position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #999;
-            font-size: 0.8rem;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 1.5rem;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translateX(20px); /* Start off-screen to the right */
+        }
+        
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+        
+        .page.exiting {
+            transform: translateX(-20px); /* Exit to the left */
+        }
+
+        /* Navigation buttons styling */
+        .nav-button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-button:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background-color: #a5b4fc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Custom styles for section titles */
+        .section-title {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.75rem, 5vw, 2.25rem);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+        .section-subtitle {
+            font-family: 'Gowun Dodum', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.15rem);
+            text-align: center;
+            color: #4b5563;
+            margin-bottom: 2rem;
         }
         .hero-gradient {
             background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.1));
-        }
-        .section-title-sm {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 900;
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            text-align: center;
-            margin-bottom: 0.5rem;
-            color: #212529;
-        }
-         .section-subtitle-sm {
-            font-family: 'Gowun Dodum', sans-serif;
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            text-align: center;
-            color: #495057;
-            margin-bottom: 1.5rem;
-        }
-        .navigation-buttons {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: flex;
-            gap: 1rem;
-        }
-        .navigation-buttons button {
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 9999px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s;
         }
     </style>
 </head>
 <body>
 
-<div id="flipbook-container">
-    <div id="flipbook">
-        <!-- Cover -->
-        <div class="hard page bg-cover bg-center" style="background-image: url('imgi_7_vis_4.jpg');">
-            <div class="hero-gradient h-full w-full flex flex-col justify-end p-8 text-white">
-                 <div class="w-40 md:w-48 mb-4">
-                    <img src="imgi_6_logo.png" alt="에피트 로고" class="w-full brightness-0 invert">
-                </div>
-                <h1 class="font-['Gowun+Dodum'] text-2xl md:text-3xl font-semibold leading-snug drop-shadow-md">
-                    이천 부발역 에피트<br>프리미엄 브로슈어
-                </h1>
-                <div class="absolute bottom-8 left-8 text-white/70 text-xs font-gowun md:hidden">
-                    <p>페이지의 모서리를 드래그하여<br>책장을 넘겨보세요.</p>
-                </div>
+<div id="app-container">
+    <div id="content-viewer">
+        <!-- Header with Progress Bar -->
+        <div id="page-header">
+            <div id="progress-bar-container">
+                <div id="progress-bar" style="width: 0%;"></div>
             </div>
         </div>
         
-        <!-- Page 1: Location -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">압도적 입지</h2>
-                <p class="section-subtitle-sm">이천의 모든 가치가 모이는 중심</p>
-                <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
-                <div class="page-number">1</div>
+        <!-- Page Content Area -->
+        <div id="page-container">
+            <!-- Page 1: Cover -->
+            <div class="page active" data-page-name="표지">
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('imgi_7_vis_4.jpg');">
+                    <div class="hero-gradient h-full w-full flex flex-col justify-end p-8 text-white">
+                        <div class="w-40 md:w-48 mb-4">
+                            <img src="imgi_6_logo.png" alt="에피트 로고" class="w-full brightness-0 invert">
+                        </div>
+                        <h1 class="font-['Gowun_Dodum'] text-3xl md:text-4xl font-semibold leading-snug drop-shadow-md">
+                            이천 부발역 에피트<br>프리미엄 브로슈어
+                        </h1>
+                        <p class="mt-4 text-white/80">아래 '다음' 버튼을 눌러 시작하세요.</p>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Page 2: Price -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">합리적 분양가</h2>
-                <p class="section-subtitle-sm">주변 단지 대비 높은 가치, 현명한 선택</p>
-                <div class="w-full h-3/4">
+            <!-- Page 2: Location -->
+            <div class="page" data-page-name="입지">
+                <h2 class="section-title">압도적 입지</h2>
+                <p class="section-subtitle">이천의 모든 가치가 모이는 중심</p>
+                <img src="imgi_44_location_img.jpg" alt="이천 부발역 에피트 입지" class="w-full h-auto rounded-lg shadow-md">
+            </div>
+
+            <!-- Page 3: Premium -->
+            <div class="page" data-page-name="프리미엄">
+                <h2 class="section-title">PREMIUM 9</h2>
+                <p class="section-subtitle">에피트가 자랑하는 9가지 특별한 가치</p>
+                <img src="imgi_2_premium_img.jpg" alt="프리미엄 9" class="w-full h-auto rounded-lg">
+            </div>
+
+            <!-- Page 4: Subscription Info -->
+            <div class="page" data-page-name="청약 정보">
+                <h2 class="section-title">청약 안내</h2>
+                <p class="section-subtitle">높은 관심 속, 성공적인 청약 마감</p>
+                <div class="flex flex-col items-center gap-4">
+                    <img src="imgi_2_pop250115.jpg" alt="청약 경쟁률" class="w-full max-w-sm rounded-lg shadow-md">
+                    <img src="imgi_5_pop250627.png" alt="청약 조건" class="w-full max-w-sm rounded-lg shadow-md">
+                </div>
+            </div>
+
+            <!-- Page 5: Rights Transfer -->
+            <div class="page" data-page-name="권리의무 승계">
+                <h2 class="section-title">권리의무 승계 안내</h2>
+                <p class="section-subtitle">전매 등 승계 일정을 확인하세요</p>
+                <div class="flex justify-center">
+                    <img src="imgi_4_pop250623.jpg" alt="권리의무 승계 안내" class="w-full max-w-sm rounded-lg shadow-md">
+                </div>
+            </div>
+
+            <!-- Page 6: Price -->
+            <div class="page" data-page-name="분양가">
+                <h2 class="section-title">합리적 분양가</h2>
+                <p class="section-subtitle">주변 단지 대비 높은 가치, 현명한 선택</p>
+                <div class="w-full h-3/4 min-h-[300px]">
                     <canvas id="priceChart"></canvas>
                 </div>
-                <p class="text-center mt-2 text-xs text-gray-500">※ 84㎡, 20층 이상 기준</p>
-                <div class="page-number">2</div>
+                <p class="text-center mt-4 text-sm text-gray-500">※ 84㎡, 20층 이상 기준</p>
             </div>
-        </div>
-        
-        <!-- Page 3: Education -->
-        <div class="page">
-             <div class="page-wrapper items-center">
-                 <h2 class="section-title-sm">명품 교육 환경</h2>
-                 <p class="section-subtitle-sm">자녀의 미래를 위한 최고의 선택</p>
-                <img src="imgi_1_pop250407.jpg" alt="에듀 프리미엄" class="max-w-xs w-full rounded-lg shadow-md">
-                 <div class="p-4 text-center">
-                    <h3 class="text-lg font-bold">서울대 멘토 교육 프로그램</h3>
-                    <p class="text-gray-600 text-sm mt-1">안전한 도보 통학권의 초/중/고교는 기본,<br>에피트만의 특별한 교육 혜택까지 누립니다.</p>
+            
+            <!-- Page 7: Education -->
+            <div class="page" data-page-name="교육">
+                <h2 class="section-title">명품 교육 환경</h2>
+                <p class="section-subtitle">자녀의 미래를 위한 최고의 선택</p>
+                <div class="flex flex-col items-center text-center">
+                    <img src="imgi_1_pop250407.jpg" alt="에듀 프리미엄" class="max-w-xs w-full rounded-lg shadow-md">
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-gray-800">서울대 멘토 교육 프로그램</h3>
+                        <p class="text-gray-600 text-base mt-2">안전한 도보 통학권의 초/중/고교는 기본,<br>에피트만의 특별한 교육 혜택까지 누립니다.</p>
+                    </div>
                 </div>
-                 <div class="page-number">3</div>
             </div>
-        </div>
 
-        <!-- Page 4: Life Infrastructure -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">완벽한 생활 인프라</h2>
-                <p class="section-subtitle-sm">쇼핑, 문화, 자연, 배송까지 편리하게</p>
-                <div class="space-y-4">
+            <!-- Page 8: Life Infrastructure -->
+            <div class="page" data-page-name="생활 인프라">
+                <h2 class="section-title">완벽한 생활 인프라</h2>
+                <p class="section-subtitle">쇼핑, 문화, 자연, 배송까지 편리하게</p>
+                <div class="space-y-3">
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-yellow-100 text-yellow-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div><div><h4 class="font-bold text-sm">편리한 쇼핑</h4><p class="text-xs text-gray-600">하나로마트, 롯데마트 등</p></div></div>
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-red-100 text-red-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg></div><div><h4 class="font-bold text-sm">가까운 의료</h4><p class="text-xs text-gray-600">경기도의료원 이천병원</p></div></div>
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-indigo-100 text-indigo-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg></div><div><h4 class="font-bold text-sm">다양한 문화/여가</h4><p class="text-xs text-gray-600">이천시립도서관, 온천공원 등</p></div></div>
                     <div class="bg-gray-50 p-3 rounded-lg flex items-center space-x-3"><div class="bg-teal-100 text-teal-700 p-2 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945C21.055 11 21 11.555 21 12c0 5.523-4.477 10-10 10S1 17.523 1 12c0-.445.055-1 .945-1z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a2 2 0 012 2v6h-4V4a2 2 0 012-2z" /></svg></div><div><h4 class="font-bold text-sm">쾌적한 자연</h4><p class="text-xs text-gray-600">단지 앞 어린이공원, 효양산</p></div></div>
-                    <div class="bg-orange-50 p-4 rounded-lg flex items-center space-x-4 mt-8"><div class="bg-orange-100 text-orange-700 p-3 rounded-full shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div><div><h4 class="font-bold">빠른 배송 생활권</h4><p class="text-sm text-gray-600">쿠팡, 마켓컬리 등 새벽/당일배송 이용</p></div></div>
+                    <div class="bg-orange-100 p-4 rounded-lg flex items-center space-x-4 mt-6"><div class="text-orange-600 shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div><div><h4 class="font-bold text-orange-800">빠른 배송 생활권</h4><p class="text-sm text-orange-700">쿠팡, 마켓컬리 등 새벽/당일배송 이용</p></div></div>
                 </div>
-                <div class="page-number">4</div>
             </div>
-        </div>
 
-        <!-- Page 5: Unit 84A -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84A</h2>
-                <p class="section-subtitle-sm">가장 선호도 높은 4Bay 판상형 구조</p>
+            <!-- Page 9: Unit 84A -->
+            <div class="page" data-page-name="UNIT 84A">
+                <h2 class="section-title">UNIT 84A</h2>
+                <p class="section-subtitle">가장 선호도 높은 4Bay 판상형 구조</p>
                 <img src="imgi_3_unit_84a_img02.jpg" alt="84A 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">5</div>
             </div>
-        </div>
-        
-        <!-- Page 6: Unit 84B -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84B</h2>
-                <p class="section-subtitle-sm">효율적인 공간 구성의 실속 평면</p>
+            
+            <!-- Page 10: Unit 84B -->
+            <div class="page" data-page-name="UNIT 84B">
+                <h2 class="section-title">UNIT 84B</h2>
+                <p class="section-subtitle">효율적인 공간 구성의 실속 평면</p>
                 <img src="imgi_3_unit_84b_img02.jpg" alt="84B 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">6</div>
             </div>
-        </div>
 
-        <!-- Page 7: Unit 84C -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84C</h2>
-                <p class="section-subtitle-sm">넓은 개방감과 쾌적함을 선사하는 평면</p>
+            <!-- Page 11: Unit 84C -->
+            <div class="page" data-page-name="UNIT 84C">
+                <h2 class="section-title">UNIT 84C</h2>
+                <p class="section-subtitle">넓은 개방감과 쾌적함을 선사하는 평면</p>
                 <img src="imgi_3_unit_84c_img02.jpg" alt="84C 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">7</div>
             </div>
-        </div>
 
-        <!-- Page 8: Unit 84D -->
-        <div class="page">
-            <div class="page-wrapper">
-                <h2 class="section-title-sm">UNIT 84D</h2>
-                <p class="section-subtitle-sm">다양한 라이프스타일을 담는 감각적인 평면</p>
+            <!-- Page 12: Unit 84D -->
+            <div class="page" data-page-name="UNIT 84D">
+                <h2 class="section-title">UNIT 84D</h2>
+                <p class="section-subtitle">다양한 라이프스타일을 담는 감각적인 평면</p>
                 <img src="imgi_3_unit_84d_img02.jpg" alt="84D 평면도" class="w-full h-auto rounded-md">
-                <div class="page-number">8</div>
             </div>
-        </div>
-        
-        <!-- Back Cover -->
-        <div class="hard page">
-            <div class="page-wrapper items-center text-center">
-                <h2 class="section-title-sm">오시는 길</h2>
-                <p class="text-gray-600 text-sm">모델하우스에서 에피트의 가치를 직접 확인하세요.</p>
-                <div class="mt-4 w-full h-1/2 max-w-md rounded-lg overflow-hidden shadow-lg">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3179.799518298018!2d127.487963!3d37.181811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b6d411b593617%3A0x868a54d5e3881e5c!2z6rK96riw64-EIOydgOyjvOydgCDrsJXrsKn7J64g7JWE66-466asIDY4Mi01!5e0!m2!1sko!2skr!4v1688200000000!5m2!1sko!2skr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            
+            <!-- Page 13: Back Cover -->
+            <div class="page" data-page-name="오시는 길">
+                <div class="text-center">
+                    <h2 class="section-title">오시는 길</h2>
+                    <p class="text-gray-600 text-base mb-4">모델하우스에서 에피트의 가치를 직접 확인하세요.</p>
+                    <div class="w-full h-48 md:h-64 rounded-lg overflow-hidden shadow-lg">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3179.799518298018!2d127.487963!3d37.181811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b6d411b593617%3A0x868a54d5e3881e5c!2z6rK96riw64-EIOydgOyjvOydgCDrsJXrsKn7J64g7JWE66-466asIDY4Mi01!5e0!m2!1sko!2skr!4v1688200000000!5m2!1sko!2skr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <p class="text-base font-bold mt-4">경기도 이천시 부발읍 아미리 682-5</p>
+                    <p class="text-xl font-bold mt-2 text-indigo-600">T. 031.632.5100</p>
                 </div>
-                <p class="text-sm font-bold mt-4">경기도 이천시 부발읍 아미리 682-5</p>
-                <p class="text-lg font-bold mt-2 text-blue-600">T. 031.632.5100</p>
             </div>
         </div>
     </div>
-    <div class="navigation-buttons">
-        <button id="prev-btn">&lt; 이전</button>
-        <button id="next-btn">다음 &gt;</button>
+
+    <!-- Navigation Area -->
+    <div class="mt-6 flex gap-4 items-center">
+        <button id="prev-btn" class="nav-button">&lt; 이전</button>
+        <div id="page-indicator" class="text-sm text-gray-600 w-24 text-center"></div>
+        <button id="next-btn" class="nav-button">다음 &gt;</button>
     </div>
 </div>
 
 <script>
-    // This script will run after the entire page, including all images, is fully loaded.
-    // This prevents the "turn is not a function" error by ensuring all libraries are ready.
-    window.addEventListener('load', function () {
-        const flipbook = $('#flipbook');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Element Selection ---
+        const pages = document.querySelectorAll('.page');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const pageIndicator = document.getElementById('page-indicator');
+        
+        // --- State Management ---
+        let currentPageIndex = 0;
+        let chartRendered = false; // Flag to ensure chart renders only once
 
-        function resizeFlipbook() {
-            const container = $('#flipbook-container');
-            const aspectRatio = 0.707; 
+        // --- Functions ---
 
-            const maxWidth = container.width() * 0.95;
-            const maxHeight = container.height() * 0.9;
+        /**
+         * Main function to display a page by its index.
+         * Handles animations, button states, progress bar, and page indicator.
+         * @param {number} index - The index of the page to show.
+         */
+        function showPage(index) {
+            const oldPageIndex = currentPageIndex;
+            currentPageIndex = index;
 
-            let bookHeight = maxHeight;
-            let bookWidth = bookHeight * aspectRatio;
-
-            if (bookWidth > maxWidth) {
-                bookWidth = maxWidth;
-                bookHeight = bookWidth / aspectRatio;
+            // Animate out the old page
+            if (pages[oldPageIndex] && oldPageIndex !== index) {
+                pages[oldPageIndex].classList.add('exiting');
             }
+
+            // Update all pages' active status
+            pages.forEach((page, i) => {
+                if (i === index) {
+                    // Use a short timeout to allow the exit animation to start
+                    setTimeout(() => {
+                        page.classList.remove('exiting');
+                        page.classList.add('active');
+                    }, 50);
+                } else {
+                    page.classList.remove('active');
+                }
+            });
             
-            if (flipbook.turn('is')) {
-                flipbook.turn('size', bookWidth, bookHeight);
+            updateNavigation();
+            
+            // --- Special Page Logic ---
+            // Render the price comparison chart when its page is shown for the first time.
+            // The chart is on the 6th page (index 5).
+            if (index === 5 && !chartRendered) {
+                renderPriceChart();
+                chartRendered = true;
             }
         }
 
-        flipbook.turn({
-            display: 'single',
-            width: 1,
-            height: 1,
-            elevation: 50,
-            acceleration: true,
-            gradients: true,
-            autoCenter: true,
-            when: {
-                turned: function(event, page, view) {
-                    if (page === 2) { 
-                        renderPriceChartOnce();
-                    }
-                }
-            }
-        });
+        /**
+         * Updates the state and text of navigation controls (buttons, progress bar).
+         */
+        function updateNavigation() {
+            // Update progress bar
+            const progress = ((currentPageIndex) / (pages.length - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
 
-        resizeFlipbook();
-        $(window).on('resize', resizeFlipbook);
+            // Update page indicator text
+            const currentPageName = pages[currentPageIndex].dataset.pageName || `페이지 ${currentPageIndex + 1}`;
+            pageIndicator.textContent = `${currentPageName}`;
 
-        $('#prev-btn').on('click', function(e) {
-            e.preventDefault();
-            flipbook.turn('previous');
-        });
+            // Update button disabled state
+            prevBtn.disabled = currentPageIndex === 0;
+            nextBtn.disabled = currentPageIndex === pages.length - 1;
+        }
 
-        $('#next-btn').on('click', function(e) {
-            e.preventDefault();
-            flipbook.turn('next');
-        });
-
-        let chartRendered = false;
-        function renderPriceChartOnce() {
-            if (chartRendered) return;
-            chartRendered = true;
-            
+        /**
+         * Renders the bar chart using Chart.js.
+         */
+        function renderPriceChart() {
             const ctx = document.getElementById('priceChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
@@ -299,11 +387,42 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     animation: { duration: 1500, easing: 'easeInOutQuart' },
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, title: { display: true, text: '분양가 (단위: 억원)' } } }
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.raw}억원`;
+                                }
+                            }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: false,
+                            min: 4,
+                            title: { display: true, text: '분양가 (단위: 억원)' } 
+                        } 
+                    }
                 }
             });
         }
+
+        // --- Event Listeners ---
+        nextBtn.addEventListener('click', () => {
+            if (currentPageIndex < pages.length - 1) {
+                showPage(currentPageIndex + 1);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPageIndex > 0) {
+                showPage(currentPageIndex - 1);
+            }
+        });
+
+        // --- Initial Load ---
+        showPage(0); // Show the first page initially
     });
 </script>
 
